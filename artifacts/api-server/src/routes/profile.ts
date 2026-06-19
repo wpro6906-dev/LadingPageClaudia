@@ -42,28 +42,22 @@ router.get("/profile", async (req, res) => {
 
 router.patch("/profile", requireAuth, async (req, res) => {
   const body = req.body as Record<string, unknown>;
-  const allowed = ["name", "subtitle", "tagline", "logoUrl", "backgroundUrl", "primaryColor", "goldColor", "fontTitle", "fontBody"];
-  const updates: Record<string, unknown> = {};
 
-  const keyMap: Record<string, string> = {
-    logoUrl: "logo_url",
-    backgroundUrl: "background_url",
-    primaryColor: "primary_color",
-    goldColor: "gold_color",
-    fontTitle: "font_title",
-    fontBody: "font_body",
-    visualConfig: "visual_config",
-  };
+  // Build updates using Drizzle's JS property names (camelCase), NOT SQL column names
+  const updates: Partial<typeof profileTable.$inferInsert> = {};
 
-  for (const key of allowed) {
-    if (key in body) {
-      const dbKey = keyMap[key] ?? key;
-      updates[dbKey] = body[key];
-    }
-  }
+  if ("name" in body)            updates.name = body.name as string;
+  if ("subtitle" in body)        updates.subtitle = body.subtitle as string;
+  if ("tagline" in body)         updates.tagline = body.tagline as string;
+  if ("logoUrl" in body)         updates.logoUrl = body.logoUrl as string | null;
+  if ("backgroundUrl" in body)   updates.backgroundUrl = body.backgroundUrl as string | null;
+  if ("primaryColor" in body)    updates.primaryColor = body.primaryColor as string;
+  if ("goldColor" in body)       updates.goldColor = body.goldColor as string;
+  if ("fontTitle" in body)       updates.fontTitle = body.fontTitle as string;
+  if ("fontBody" in body)        updates.fontBody = body.fontBody as string;
 
   if ("visualConfig" in body) {
-    updates["visual_config"] = typeof body.visualConfig === "string"
+    updates.visualConfig = typeof body.visualConfig === "string"
       ? body.visualConfig
       : JSON.stringify(body.visualConfig);
   }
@@ -72,7 +66,7 @@ router.patch("/profile", requireAuth, async (req, res) => {
     return res.status(400).json({ error: "Nothing to update" });
   }
 
-  const [updated] = await db.update(profileTable).set(updates as any).returning();
+  const [updated] = await db.update(profileTable).set(updates).returning();
   return res.json(serializeProfile(updated));
 });
 

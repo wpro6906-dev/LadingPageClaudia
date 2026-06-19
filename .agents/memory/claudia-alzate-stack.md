@@ -29,6 +29,11 @@ description: Key rules, gotchas, and decisions for the Claudia Alzate Realtor® 
 - Do NOT use `bg-radial` — not a standard Tailwind class. Use inline style for radial gradients.
 - Do NOT use `text-balance` — not universally supported. Use `text-center`.
 
+## Drizzle ORM — .set() usa camelCase, NO snake_case
+- `db.update(table).set({ backgroundUrl: value })` ✅ correcto
+- `db.update(table).set({ background_url: value })` ❌ Drizzle ignora la clave — genera `UPDATE SET` vacío y falla con error SQL
+- **Por qué:** Drizzle mapea internamente sus propiedades JS → columnas SQL. Nunca construir el objeto `set()` con nombres de columna SQL.
+
 ## Admin credentials
 - username: `admin`, password: `admin123` (in-memory session auth, no persistent store)
 
