@@ -24,6 +24,8 @@ export interface CredentialsUpdate {
   currentPassword?: string;
 }
 
+export type ProfileVisualConfig = { [key: string]: unknown };
+
 export interface Profile {
   name: string;
   subtitle: string;
@@ -36,7 +38,10 @@ export interface Profile {
   goldColor: string;
   fontTitle: string;
   fontBody: string;
+  visualConfig?: ProfileVisualConfig;
 }
+
+export type ProfileUpdateVisualConfig = { [key: string]: unknown };
 
 export interface ProfileUpdate {
   name?: string;
@@ -50,6 +55,7 @@ export interface ProfileUpdate {
   goldColor?: string;
   fontTitle?: string;
   fontBody?: string;
+  visualConfig?: ProfileUpdateVisualConfig;
 }
 
 export interface Link {

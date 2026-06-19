@@ -5,6 +5,7 @@
  * Claudia Alzate Realtor® API
  * OpenAPI spec version: 0.1.0
  */
+import type { ProfileVisualConfig } from './profileVisualConfig';
 
 export interface Profile {
   name: string;
@@ -18,4 +19,5 @@ export interface Profile {
   goldColor: string;
   fontTitle: string;
   fontBody: string;
+  visualConfig?: ProfileVisualConfig;
 }

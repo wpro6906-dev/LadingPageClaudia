@@ -313,6 +313,9 @@ components:
           type: string
         fontBody:
           type: string
+        visualConfig:
+          type: object
+          additionalProperties: true
 
     ProfileUpdate:
       type: object
@@ -335,6 +338,9 @@ components:
           type: string
         fontBody:
           type: string
+        visualConfig:
+          type: object
+          additionalProperties: true
 
     Link:
       type: object

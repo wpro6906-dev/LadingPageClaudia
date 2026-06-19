@@ -18,5 +18,7 @@ export * from './linkUpdate';
 export * from './loginInput';
 export * from './profile';
 export * from './profileUpdate';
+export * from './profileUpdateVisualConfig';
+export * from './profileVisualConfig';
 export * from './trackEventInput';
 export * from './trackEventInputType';

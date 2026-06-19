@@ -1,9 +1,52 @@
-import { useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useGetProfile, getGetProfileQueryKey, useGetLinks, getGetLinksQueryKey } from "@workspace/api-client-react";
 import logoPath from "@assets/image_1781908878316.png";
-import { getIconComponent } from "@/components/ui/icons";
+import { getIconComponent, ChevronRight } from "@/components/ui/icons";
 import { Skeleton } from "@/components/ui/skeleton";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
+import { Home, MapPin, Star, Key, Building2 } from "lucide-react";
+
+interface VisualConfig {
+  firstName?: string;
+  lastName?: string;
+  firstNameColor?: string;
+  lastNameColor?: string;
+  subtitleText?: string;
+  subtitleColor?: string;
+  decoratorEnabled?: boolean;
+  decoratorIcon?: string;
+  decoratorColor?: string;
+  tagline1?: string;
+  tagline2?: string;
+  tagline1Color?: string;
+  tagline2Color?: string;
+  bgOverlay?: number;
+  bgBlur?: number;
+  bgZoom?: number;
+  bgPosition?: string;
+  gradientTop?: boolean;
+  gradientBottom?: boolean;
+  showDecorLines?: boolean;
+  showGlow?: boolean;
+  nameLetterSpacing?: string;
+  showArrowOnButtons?: boolean;
+  showAccentBarOnButtons?: boolean;
+}
+
+function getVC(profile: any): Required<VisualConfig> {
+  const defaults = {
+    firstName: "Claudia", lastName: "Alzate",
+    firstNameColor: "#FFFFFF", lastNameColor: "#D4B483",
+    subtitleText: "REALTOR", subtitleColor: "#D4B483",
+    decoratorEnabled: true, decoratorIcon: "home", decoratorColor: "#D4B483",
+    tagline1: "Te ayudo a encontrar más que una casa,", tagline2: "tu próximo hogar.",
+    tagline1Color: "#FFFFFF", tagline2Color: "#D4B483",
+    bgOverlay: 0.7, bgBlur: 0, bgZoom: 1, bgPosition: "center",
+    gradientTop: true, gradientBottom: true, showDecorLines: true, showGlow: true,
+    nameLetterSpacing: "0.05em", showArrowOnButtons: true, showAccentBarOnButtons: true
+  };
+  return { ...defaults, ...(profile?.visualConfig || {}) };
+}
 
 export default function PublicProfile() {
   const { data: profile, isLoading: isProfileLoading } = useGetProfile({
@@ -21,7 +64,7 @@ export default function PublicProfile() {
       method: 'POST',
       body: JSON.stringify({ type: 'page_view' }),
       headers: { 'Content-Type': 'application/json' }
-    }).catch(console.error);
+    }).catch(() => {});
   }, []);
 
   const handleLinkClick = (e: React.MouseEvent<HTMLAnchorElement>, link: any) => {
@@ -31,7 +74,7 @@ export default function PublicProfile() {
       body: JSON.stringify({ type: 'link_click', linkId: link.id }),
       headers: { 'Content-Type': 'application/json' }
     })
-      .catch(console.error)
+      .catch(() => {})
       .finally(() => {
         window.open(link.url, '_blank', 'noopener,noreferrer');
       });
@@ -52,14 +95,20 @@ export default function PublicProfile() {
     );
   }
 
+  const vc = getVC(profile);
+  
+  const DecoratorIcon = (() => {
+    const name = vc.decoratorIcon?.toLowerCase();
+    if (name === "mappin") return MapPin;
+    if (name === "star") return Star;
+    if (name === "key") return Key;
+    if (name === "building2" || name === "building") return Building2;
+    return Home;
+  })();
+
   const containerVariants = {
     hidden: { opacity: 0 },
-    show: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.1
-      }
-    }
+    show: { opacity: 1, transition: { staggerChildren: 0.1 } }
   };
 
   const itemVariants = {
@@ -69,68 +118,151 @@ export default function PublicProfile() {
 
   return (
     <div className="min-h-[100dvh] bg-background text-foreground relative flex flex-col lg:flex-row overflow-hidden lg:overflow-hidden">
-      
+      {/* Mobile background */}
+      <div className="absolute inset-0 lg:hidden -z-10 overflow-hidden">
+        {profile?.backgroundUrl ? (
+          <>
+            <div 
+              className="absolute inset-0 scale-105"
+              style={{
+                backgroundImage: `url(${profile.backgroundUrl})`,
+                backgroundSize: `${(vc.bgZoom || 1) * 100}%`,
+                backgroundPosition: vc.bgPosition || "center",
+                filter: `blur(${vc.bgBlur || 0}px)`
+              }}
+            />
+            <div className="absolute inset-0 bg-black" style={{ opacity: vc.bgOverlay ?? 0.7 }} />
+          </>
+        ) : (
+          <div className="absolute inset-0 bg-gradient-to-b from-[#0a0806] to-background" />
+        )}
+      </div>
+
       {/* Left Column / Mobile Header */}
       <div className="relative w-full lg:w-[40%] flex flex-col items-center justify-center p-8 lg:p-12 z-10 
-        bg-gradient-to-b from-background to-black lg:border-r border-primary/20 shrink-0 lg:h-[100dvh]">
+        lg:border-r border-primary/20 shrink-0 lg:h-[100dvh] overflow-hidden">
         
-        {/* Subtle radial background gradient for mobile (and desktop left col) */}
-        <div className="absolute top-0 inset-x-0 h-64 bg-radial from-primary/8 to-transparent opacity-60 pointer-events-none" />
-        {/* Luxury subtle pattern/noise */}
-        <div className="absolute inset-0 opacity-[0.02] pointer-events-none mix-blend-overlay" style={{ backgroundImage: 'url("data:image/svg+xml,%3Csvg viewBox=%220 0 200 200%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22noiseFilter%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%220.65%22 numOctaves=%223%22 stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23noiseFilter)%22/%3E%3C/svg%3E")' }} />
+        {/* Desktop left column background */}
+        <div className="absolute inset-0 hidden lg:block -z-10">
+          {profile?.backgroundUrl ? (
+            <>
+              <div 
+                className="absolute inset-0 scale-105"
+                style={{
+                  backgroundImage: `url(${profile.backgroundUrl})`,
+                  backgroundSize: `${(vc.bgZoom || 1) * 100}%`,
+                  backgroundPosition: vc.bgPosition || "center",
+                  filter: `blur(${vc.bgBlur || 0}px)`
+                }}
+              />
+              <div className="absolute inset-0 bg-black" style={{ opacity: vc.bgOverlay ?? 0.7 }} />
+            </>
+          ) : (
+            <div className="absolute inset-0 bg-gradient-to-b from-[#0a0806] to-background" />
+          )}
+        </div>
+
+        {vc.gradientTop && (
+          <div className="absolute top-0 inset-x-0 h-32 bg-gradient-to-b from-background to-transparent z-0 pointer-events-none" />
+        )}
+        
+        {vc.gradientBottom && (
+          <div className="absolute bottom-0 inset-x-0 h-32 bg-gradient-to-b from-transparent to-background z-0 hidden lg:block pointer-events-none" />
+        )}
+
+        {vc.showDecorLines && (
+          <>
+            <div className="absolute w-px h-1/2 bg-gradient-to-b from-transparent via-primary/20 to-transparent left-0 top-1/4 pointer-events-none" />
+            <div className="absolute w-px h-1/2 bg-gradient-to-b from-transparent via-primary/20 to-transparent right-0 top-1/4 pointer-events-none" />
+          </>
+        )}
+
+        {vc.showGlow && (
+          <div className="absolute w-96 h-96 -top-24 left-1/2 -translate-x-1/2 rounded-full bg-primary/5 blur-3xl pointer-events-none" />
+        )}
 
         {/* Logo */}
         <motion.div 
           initial={{ scale: 0.9, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
           transition={{ duration: 0.8, ease: "easeOut" }}
-          className="mb-8 rounded-full relative"
+          className="mb-8 rounded-full relative z-10"
         >
-          <div className="absolute inset-0 rounded-full border border-primary animate-pulse shadow-[0_0_20px_rgba(212,175,55,0.3)]"></div>
+          <div className="absolute inset-0 rounded-full border border-primary/10 animate-pulse shadow-[0_0_20px_rgba(212,175,55,0.15)] scale-[1.05]"></div>
           <div className="w-28 h-28 lg:w-36 lg:h-36 overflow-hidden rounded-full border border-primary/40 bg-black/60 p-1 backdrop-blur-sm relative z-10">
             <img src={profile?.logoUrl || logoPath} alt="Logo" className="w-full h-full object-cover rounded-full" />
           </div>
         </motion.div>
 
         {/* Identity */}
-        <motion.h1 
-          initial={{ y: 10, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ duration: 0.6, delay: 0.2 }}
-          className="text-4xl lg:text-5xl font-serif text-foreground tracking-widest mb-3 text-center text-balance font-light"
-        >
-          {profile?.name || "Claudia Alzate"}
-        </motion.h1>
-        
-        <motion.h2 
-          initial={{ y: 10, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ duration: 0.6, delay: 0.3 }}
-          className="text-xs lg:text-sm font-sans text-primary uppercase mb-6 text-center tracking-[0.35em]"
-        >
-          {profile?.subtitle || "Realtor®"}
-        </motion.h2>
-
-        <motion.div 
-          initial={{ scaleX: 0 }}
-          animate={{ scaleX: 1 }}
-          transition={{ duration: 0.8, delay: 0.4 }}
-          className="w-16 h-px bg-primary mb-6"
-        />
+        <div className="flex flex-col items-center mb-3 z-10">
+          <motion.span 
+            initial={{ y: 10, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+            className="text-4xl lg:text-6xl font-serif text-center font-light"
+            style={{ color: vc.firstNameColor, letterSpacing: vc.nameLetterSpacing, fontFamily: "'Playfair Display', serif" }}
+          >
+            {vc.firstName}
+          </motion.span>
+          <motion.span 
+            initial={{ y: 10, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ duration: 0.6, delay: 0.3 }}
+            className="text-4xl lg:text-6xl font-serif text-center font-medium"
+            style={{ color: vc.lastNameColor, letterSpacing: vc.nameLetterSpacing, fontFamily: "'Playfair Display', serif" }}
+          >
+            {vc.lastName}
+          </motion.span>
+        </div>
         
         <motion.p 
           initial={{ y: 10, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
-          transition={{ duration: 0.6, delay: 0.5 }}
-          className="text-center text-[#f8f5f0] max-w-[300px] lg:max-w-[340px] leading-relaxed text-[18px] lg:text-[20px]"
-          style={{ fontFamily: "'Cormorant Garamond', serif", fontStyle: "italic" }}
+          transition={{ duration: 0.6, delay: 0.4 }}
+          className="text-xs font-sans uppercase mb-6 text-center tracking-[0.4em] z-10"
+          style={{ color: vc.subtitleColor, fontFamily: "'Montserrat', sans-serif" }}
         >
-          "{profile?.tagline || "Te ayudo a encontrar más que una casa, tu próximo hogar."}"
+          {vc.subtitleText}
         </motion.p>
 
-        <div className="hidden lg:block absolute bottom-8 left-0 right-0 text-center">
+        {vc.decoratorEnabled !== false && (
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.8, delay: 0.5 }}
+            className="flex flex-row items-center gap-3 mb-6 z-10 w-full max-w-[160px]"
+          >
+            <div className="flex-1 max-w-[60px] h-px bg-primary opacity-50" />
+            <DecoratorIcon className="w-3 h-3" style={{ color: vc.decoratorColor }} />
+            <div className="flex-1 max-w-[60px] h-px bg-primary opacity-50" />
+          </motion.div>
+        )}
+        
+        <div className="flex flex-col items-center gap-2 z-10">
+          <motion.p 
+            initial={{ y: 10, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ duration: 0.6, delay: 0.6 }}
+            className="font-sans text-sm opacity-80 text-center"
+            style={{ color: vc.tagline1Color }}
+          >
+            {vc.tagline1}
+          </motion.p>
+          <motion.p 
+            initial={{ y: 10, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ duration: 0.6, delay: 0.7 }}
+            className="text-xl lg:text-2xl font-semibold text-center"
+            style={{ color: vc.tagline2Color, fontFamily: "'Cormorant Garamond', serif", fontStyle: "italic" }}
+          >
+            {vc.tagline2}
+          </motion.p>
+        </div>
+
+        <div className="hidden lg:block absolute bottom-8 left-0 right-0 text-center z-10">
            <p className="text-[10px] text-muted-foreground/60 font-sans tracking-widest uppercase">
-            © {new Date().getFullYear()} Claudia Alzate Realtor®
+            © {new Date().getFullYear()} {vc.firstName} {vc.lastName}
           </p>
         </div>
       </div>
@@ -152,33 +284,41 @@ export default function PublicProfile() {
               activeLinks.map((link) => {
                 const Icon = getIconComponent(link.icon);
                 return (
-                  <motion.a
+                  <motion.div
                     variants={itemVariants}
-                    whileHover={{ scale: 1.01 }}
                     key={link.id}
-                    href={link.url}
-                    onClick={(e) => handleLinkClick(e, link)}
-                    className="group relative block w-full bg-card/60 backdrop-blur-sm border border-primary/20 rounded-xl py-5 px-6 transition-all duration-500 hover:bg-card/80 hover:border-primary/60 hover:shadow-[0_0_20px_rgba(212,175,55,0.15)] overflow-hidden"
                   >
-                    {/* Left accent bar */}
-                    <div className="absolute left-0 top-0 bottom-0 w-1 bg-primary opacity-50 group-hover:opacity-100 transition-opacity duration-300" />
-                    
-                    <div className="flex items-center gap-5 relative z-10">
-                      <div className="text-primary group-hover:scale-110 transition-transform duration-500 drop-shadow-md">
-                        <Icon className="w-6 h-6" />
-                      </div>
-                      <div className="flex-1">
-                        <h3 className="font-sans font-medium text-foreground tracking-wide group-hover:text-primary transition-colors duration-300 text-[15px]">
-                          {link.title}
-                        </h3>
-                        {link.description && (
-                          <p className="text-xs text-muted-foreground mt-1 opacity-80 tracking-wide">
-                            {link.description}
-                          </p>
+                    <a
+                      href={link.url}
+                      onClick={(e) => handleLinkClick(e, link)}
+                      className="group relative block w-full bg-card/40 backdrop-blur-md border border-primary/15 rounded-2xl py-5 px-6 transition-all duration-400 hover:bg-card/70 hover:border-primary/50 hover:shadow-[0_0_24px_rgba(212,175,55,0.12)] overflow-hidden"
+                    >
+                      {vc.showAccentBarOnButtons !== false && (
+                        <div className="absolute left-0 top-3 bottom-3 w-[2px] rounded-full bg-gradient-to-b from-transparent via-primary/60 to-transparent" />
+                      )}
+                      
+                      <div className="flex items-center gap-4 relative z-10">
+                        <div className="bg-primary/8 rounded-xl p-3 shrink-0">
+                          <Icon className="w-5 h-5 text-primary" />
+                        </div>
+                        <div className="flex-1 overflow-hidden">
+                          <h3 className="font-sans font-semibold text-sm text-foreground group-hover:text-primary transition-colors duration-300 truncate">
+                            {link.title}
+                          </h3>
+                          {link.description && (
+                            <p className="text-xs text-muted-foreground/70 mt-0.5 truncate">
+                              {link.description}
+                            </p>
+                          )}
+                        </div>
+                        {vc.showArrowOnButtons !== false && (
+                          <div className="shrink-0">
+                            <ChevronRight className="w-4 h-4 text-primary/40 group-hover:text-primary/80 group-hover:translate-x-1 transition-all duration-300" />
+                          </div>
                         )}
                       </div>
-                    </div>
-                  </motion.a>
+                    </a>
+                  </motion.div>
                 );
               })
             )}
@@ -188,11 +328,8 @@ export default function PublicProfile() {
         {/* Footer (Mobile only, Desktop handles it in left col) */}
         <footer className="lg:hidden py-10 text-center w-full mt-auto flex flex-col items-center border-t border-primary/10">
           <div className="w-12 h-px bg-primary/40 mb-6" />
-          <p className="text-[10px] text-muted-foreground/60 font-sans tracking-widest uppercase mb-2">
-            REALTOR® LICENSED PROFESSIONAL
-          </p>
           <p className="text-[10px] text-muted-foreground/40 font-sans tracking-wider uppercase">
-            © {new Date().getFullYear()} Claudia Alzate Realtor®
+            © {new Date().getFullYear()} {vc.firstName} {vc.lastName}
           </p>
         </footer>
       </div>

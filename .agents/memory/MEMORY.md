@@ -1,0 +1,1 @@
+- [Claudia Alzate stack & conventions](claudia-alzate-stack.md) — key rules for this project: imports, icon fixes, VisualConfig shape, DB schema

@@ -59,7 +59,8 @@ export const GetProfileResponse = zod.object({
   "primaryColor": zod.string(),
   "goldColor": zod.string(),
   "fontTitle": zod.string(),
-  "fontBody": zod.string()
+  "fontBody": zod.string(),
+  "visualConfig": zod.record(zod.string(), zod.unknown()).optional()
 })
 
 
@@ -75,7 +76,8 @@ export const UpdateProfileBody = zod.object({
   "primaryColor": zod.string().optional(),
   "goldColor": zod.string().optional(),
   "fontTitle": zod.string().optional(),
-  "fontBody": zod.string().optional()
+  "fontBody": zod.string().optional(),
+  "visualConfig": zod.record(zod.string(), zod.unknown()).optional()
 })
 
 export const UpdateProfileResponse = zod.object({
@@ -87,7 +89,8 @@ export const UpdateProfileResponse = zod.object({
   "primaryColor": zod.string(),
   "goldColor": zod.string(),
   "fontTitle": zod.string(),
-  "fontBody": zod.string()
+  "fontBody": zod.string(),
+  "visualConfig": zod.record(zod.string(), zod.unknown()).optional()
 })
 
 
