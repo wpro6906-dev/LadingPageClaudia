@@ -20,6 +20,7 @@ import type {
 } from '@tanstack/react-query';
 
 import type {
+  AnalyticsSummary,
   AuthResult,
   CredentialsUpdate,
   HealthStatus,
@@ -29,7 +30,8 @@ import type {
   LinksReorder,
   LoginInput,
   Profile,
-  ProfileUpdate
+  ProfileUpdate,
+  TrackEventInput
 } from './api.schemas';
 
 import { customFetch } from '../custom-fetch';
@@ -847,6 +849,154 @@ export const useDeleteLink = <TError = ErrorType<void>,
       > => {
       return useMutation(getDeleteLinkMutationOptions(options));
     }
+
+export const getTrackEventUrl = () => {
+
+
+
+
+  return `/api/analytics/track`
+}
+
+/**
+ * @summary Track a page view or link click (public)
+ */
+export const trackEvent = async (trackEventInput: TrackEventInput, options?: RequestInit): Promise<void> => {
+
+  return customFetch<void>(getTrackEventUrl(),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      trackEventInput,)
+  }
+);}
+
+
+
+
+export const getTrackEventMutationOptions = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof trackEvent>>, TError,{data: BodyType<TrackEventInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof trackEvent>>, TError,{data: BodyType<TrackEventInput>}, TContext> => {
+
+const mutationKey = ['trackEvent'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof trackEvent>>, {data: BodyType<TrackEventInput>}> = (props) => {
+          const {data} = props ?? {};
+
+          return  trackEvent(data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type TrackEventMutationResult = NonNullable<Awaited<ReturnType<typeof trackEvent>>>
+    export type TrackEventMutationBody = BodyType<TrackEventInput>
+    export type TrackEventMutationError = ErrorType<unknown>
+
+    /**
+ * @summary Track a page view or link click (public)
+ */
+export const useTrackEvent = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof trackEvent>>, TError,{data: BodyType<TrackEventInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof trackEvent>>,
+        TError,
+        {data: BodyType<TrackEventInput>},
+        TContext
+      > => {
+      return useMutation(getTrackEventMutationOptions(options));
+    }
+
+export const getGetAnalyticsUrl = () => {
+
+
+
+
+  return `/api/analytics`
+}
+
+/**
+ * @summary Get analytics summary (admin only)
+ */
+export const getAnalytics = async ( options?: RequestInit): Promise<AnalyticsSummary> => {
+
+  return customFetch<AnalyticsSummary>(getGetAnalyticsUrl(),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getGetAnalyticsQueryKey = () => {
+    return [
+    `/api/analytics`
+    ] as const;
+    }
+
+
+export const getGetAnalyticsQueryOptions = <TData = Awaited<ReturnType<typeof getAnalytics>>, TError = ErrorType<void>>( options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getAnalytics>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetAnalyticsQueryKey();
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getAnalytics>>> = ({ signal }) => getAnalytics({ signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getAnalytics>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetAnalyticsQueryResult = NonNullable<Awaited<ReturnType<typeof getAnalytics>>>
+export type GetAnalyticsQueryError = ErrorType<void>
+
+
+/**
+ * @summary Get analytics summary (admin only)
+ */
+
+export function useGetAnalytics<TData = Awaited<ReturnType<typeof getAnalytics>>, TError = ErrorType<void>>(
+  options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getAnalytics>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getGetAnalyticsQueryOptions(options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+
+
+
+
+
 
 export const getReorderLinksUrl = () => {
 

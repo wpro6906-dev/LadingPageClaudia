@@ -86,3 +86,32 @@ export interface LinksReorder {
   ids: number[];
 }
 
+export type TrackEventInputType = typeof TrackEventInputType[keyof typeof TrackEventInputType];
+
+
+export const TrackEventInputType = {
+  page_view: 'page_view',
+  link_click: 'link_click',
+} as const;
+
+export interface TrackEventInput {
+  type: TrackEventInputType;
+  linkId?: number;
+}
+
+export interface AnalyticsLinkStat {
+  title: string;
+  clicks: number;
+  icon: string;
+}
+
+export interface AnalyticsSummary {
+  totalVisits: number;
+  totalClicks: number;
+  /** @nullable */
+  mostClicked?: string | null;
+  /** @nullable */
+  lastActivity?: string | null;
+  links: AnalyticsLinkStat[];
+}
+

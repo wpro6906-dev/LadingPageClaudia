@@ -15,6 +15,8 @@ tags:
     description: Profile management
   - name: links
     description: Link management
+  - name: analytics
+    description: Analytics tracking and reporting
 paths:
   /healthz:
     get:
@@ -206,6 +208,36 @@ paths:
         "404":
           description: Link not found
 
+  /analytics/track:
+    post:
+      operationId: trackEvent
+      tags: [analytics]
+      summary: Track a page view or link click (public)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/TrackEventInput"
+      responses:
+        "200":
+          description: Tracked
+
+  /analytics:
+    get:
+      operationId: getAnalytics
+      tags: [analytics]
+      summary: Get analytics summary (admin only)
+      responses:
+        "200":
+          description: Analytics summary
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AnalyticsSummary"
+        "401":
+          description: Not authenticated
+
   /links/reorder:
     patch:
       operationId: reorderLinks
@@ -362,3 +394,41 @@ components:
           type: array
           items:
             type: integer
+
+    TrackEventInput:
+      type: object
+      required: [type]
+      properties:
+        type:
+          type: string
+          enum: [page_view, link_click]
+        linkId:
+          type: integer
+
+    AnalyticsLinkStat:
+      type: object
+      required: [title, clicks, icon]
+      properties:
+        title:
+          type: string
+        clicks:
+          type: integer
+        icon:
+          type: string
+
+    AnalyticsSummary:
+      type: object
+      required: [totalVisits, totalClicks, links]
+      properties:
+        totalVisits:
+          type: integer
+        totalClicks:
+          type: integer
+        mostClicked:
+          type: ["string", "null"]
+        lastActivity:
+          type: ["string", "null"]
+        links:
+          type: array
+          items:
+            $ref: "#/components/schemas/AnalyticsLinkStat"

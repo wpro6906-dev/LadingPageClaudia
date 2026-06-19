@@ -154,6 +154,31 @@ export const DeleteLinkParams = zod.object({
 
 
 /**
+ * @summary Track a page view or link click (public)
+ */
+export const TrackEventBody = zod.object({
+  "type": zod.enum(['page_view', 'link_click']),
+  "linkId": zod.number().optional()
+})
+
+
+/**
+ * @summary Get analytics summary (admin only)
+ */
+export const GetAnalyticsResponse = zod.object({
+  "totalVisits": zod.number(),
+  "totalClicks": zod.number(),
+  "mostClicked": zod.string().nullish(),
+  "lastActivity": zod.string().nullish(),
+  "links": zod.array(zod.object({
+  "title": zod.string(),
+  "clicks": zod.number(),
+  "icon": zod.string()
+}))
+})
+
+
+/**
  * @summary Reorder links (admin only)
  */
 export const ReorderLinksBody = zod.object({

@@ -6,6 +6,8 @@
  * OpenAPI spec version: 0.1.0
  */
 
+export * from './analyticsLinkStat';
+export * from './analyticsSummary';
 export * from './authResult';
 export * from './credentialsUpdate';
 export * from './healthStatus';
@@ -16,3 +18,5 @@ export * from './linkUpdate';
 export * from './loginInput';
 export * from './profile';
 export * from './profileUpdate';
+export * from './trackEventInput';
+export * from './trackEventInputType';
