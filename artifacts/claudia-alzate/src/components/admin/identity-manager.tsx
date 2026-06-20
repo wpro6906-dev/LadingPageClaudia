@@ -51,7 +51,12 @@ export function IdentityManager() {
     backgroundUrl: "",
     badgeText: "",
     badgeIcon: "mappin",
-    badgeColor: "#D4B483"
+    badgeColor: "#D4B483",
+    portraitUrl: "",
+    portraitOpacity: 0.85,
+    portraitSize: 68,
+    portraitBlendLeft: 50,
+    portraitBlendTop: 30,
   });
 
   useEffect(() => {
@@ -88,6 +93,11 @@ export function IdentityManager() {
         badgeText: vc.badgeText ?? "",
         badgeIcon: vc.badgeIcon ?? "mappin",
         badgeColor: vc.badgeColor ?? "#D4B483",
+        portraitUrl: vc.portraitUrl ?? "",
+        portraitOpacity: vc.portraitOpacity ?? 0.85,
+        portraitSize: vc.portraitSize ?? 68,
+        portraitBlendLeft: vc.portraitBlendLeft ?? 50,
+        portraitBlendTop: vc.portraitBlendTop ?? 30,
       }));
     }
   }, [profile]);
@@ -128,6 +138,11 @@ export function IdentityManager() {
           badgeText: form.badgeText,
           badgeIcon: form.badgeIcon,
           badgeColor: form.badgeColor,
+          portraitUrl: form.portraitUrl,
+          portraitOpacity: form.portraitOpacity,
+          portraitSize: form.portraitSize,
+          portraitBlendLeft: form.portraitBlendLeft,
+          portraitBlendTop: form.portraitBlendTop,
         }
       } as any 
     }, {

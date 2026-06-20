@@ -37,6 +37,11 @@ interface VisualConfig {
   badgeText?: string;
   badgeIcon?: string;
   badgeColor?: string;
+  portraitUrl?: string;
+  portraitOpacity?: number;
+  portraitSize?: number;
+  portraitBlendLeft?: number;
+  portraitBlendTop?: number;
 }
 
 function getVC(profile: any): Required<VisualConfig> {
@@ -51,7 +56,9 @@ function getVC(profile: any): Required<VisualConfig> {
     mobileBgPosition: "60% center", mobileBgZoom: 1.15, mobileBgOverlay: 0.52,
     gradientTop: true, gradientBottom: true, showDecorLines: true, showGlow: true,
     nameLetterSpacing: "0.05em", showArrowOnButtons: true, showAccentBarOnButtons: true,
-    badgeText: "", badgeIcon: "mappin", badgeColor: "#D4B483"
+    badgeText: "", badgeIcon: "mappin", badgeColor: "#D4B483",
+    portraitUrl: "", portraitOpacity: 0.85, portraitSize: 68,
+    portraitBlendLeft: 50, portraitBlendTop: 30,
   };
   return { ...defaults, ...(profile?.visualConfig || {}) };
 }
@@ -180,6 +187,54 @@ export default function PublicProfile() {
                 background: "radial-gradient(ellipse 80% 70% at 50% 50%, transparent 40%, rgba(5,3,2,0.35) 100%)",
               }}
             />
+
+            {/* Portrait — person photo, bottom-right, blended into scene */}
+            {vc.portraitUrl && (
+              <div
+                className="absolute bottom-0 right-0 pointer-events-none"
+                style={{ width: `${vc.portraitSize ?? 68}%`, height: "72%" }}
+              >
+                <img
+                  src={vc.portraitUrl}
+                  alt=""
+                  aria-hidden="true"
+                  style={{
+                    position: "absolute",
+                    bottom: 0,
+                    right: 0,
+                    width: "100%",
+                    height: "100%",
+                    objectFit: "cover",
+                    objectPosition: "top center",
+                    opacity: vc.portraitOpacity ?? 0.85,
+                  }}
+                />
+                {/* Left blend — portrait fades into the background naturally */}
+                <div
+                  style={{
+                    position: "absolute",
+                    inset: 0,
+                    background: `linear-gradient(to right, rgba(5,3,2,1) 0%, rgba(5,3,2,0.6) ${Math.round((vc.portraitBlendLeft ?? 50) * 0.5)}%, rgba(5,3,2,0.1) ${vc.portraitBlendLeft ?? 50}%, transparent 100%)`,
+                  }}
+                />
+                {/* Top blend — fades into the dark header area */}
+                <div
+                  style={{
+                    position: "absolute",
+                    inset: 0,
+                    background: `linear-gradient(to bottom, rgba(5,3,2,0.95) 0%, rgba(5,3,2,0.4) ${vc.portraitBlendTop ?? 30}%, transparent 65%)`,
+                  }}
+                />
+                {/* Bottom blend — anchor to floor */}
+                <div
+                  style={{
+                    position: "absolute",
+                    inset: 0,
+                    background: "linear-gradient(to top, rgba(5,3,2,0.7) 0%, transparent 25%)",
+                  }}
+                />
+              </div>
+            )}
           </>
         ) : (
           <div className="absolute inset-0 bg-gradient-to-b from-[#0a0806] to-background" />
