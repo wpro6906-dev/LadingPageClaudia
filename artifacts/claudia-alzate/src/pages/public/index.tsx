@@ -264,32 +264,6 @@ export default function PublicProfile() {
             <div className="absolute inset-0 bg-gradient-to-b from-[#0a0806] to-background" />
           )}
 
-          {/* Desktop portrait — bottom-right of left image column */}
-          {vc.portraitUrl && (
-            <div
-              className="absolute bottom-0 right-0 pointer-events-none"
-              style={{ width: `${vc.portraitSize ?? 50}%`, height: `${Math.min(70, (vc.portraitSize ?? 50) * 1.15)}%` }}
-            >
-              <img
-                src={vc.portraitUrl}
-                alt=""
-                aria-hidden="true"
-                style={{
-                  position: "absolute",
-                  bottom: 0,
-                  right: 0,
-                  width: "100%",
-                  height: "100%",
-                  objectFit: "cover",
-                  objectPosition: "top center",
-                  opacity: vc.portraitOpacity ?? 0.85,
-                }}
-              />
-              <div style={{ position: "absolute", inset: 0, background: `linear-gradient(to right, rgba(5,3,2,1) 0%, rgba(5,3,2,0.55) ${Math.round((vc.portraitBlendLeft ?? 50) * 0.5)}%, rgba(5,3,2,0.08) ${vc.portraitBlendLeft ?? 50}%, transparent 100%)` }} />
-              <div style={{ position: "absolute", inset: 0, background: `linear-gradient(to bottom, rgba(5,3,2,0.95) 0%, rgba(5,3,2,0.35) ${vc.portraitBlendTop ?? 30}%, transparent 65%)` }} />
-              <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to top, rgba(5,3,2,0.6) 0%, transparent 22%)" }} />
-            </div>
-          )}
         </div>
 
         {vc.gradientTop && (
@@ -306,6 +280,20 @@ export default function PublicProfile() {
             <div className="absolute w-px h-1/2 bg-gradient-to-b from-transparent via-primary/20 to-transparent right-0 top-1/4 pointer-events-none" />
           </>
         )}
+
+        {/* Desktop-only corner ornaments — luxury architecture-inspired */}
+        <div className="hidden lg:block absolute top-8 left-8 z-10 pointer-events-none">
+          <div className="w-8 h-px bg-gradient-to-r from-primary/60 to-transparent" />
+          <div className="w-px h-8 bg-gradient-to-b from-primary/60 to-transparent mt-0" />
+        </div>
+        <div className="hidden lg:block absolute top-8 right-8 z-10 pointer-events-none">
+          <div className="w-8 h-px bg-gradient-to-l from-primary/60 to-transparent ml-auto" />
+          <div className="w-px h-8 bg-gradient-to-b from-primary/60 to-transparent ml-auto" />
+        </div>
+        <div className="hidden lg:block absolute bottom-8 left-8 z-10 pointer-events-none">
+          <div className="w-px h-8 bg-gradient-to-t from-primary/60 to-transparent" />
+          <div className="w-8 h-px bg-gradient-to-r from-primary/60 to-transparent" />
+        </div>
 
         {vc.showGlow && (
           <div className="absolute w-96 h-96 -top-24 left-1/2 -translate-x-1/2 rounded-full bg-primary/5 blur-3xl pointer-events-none" />
@@ -415,8 +403,69 @@ export default function PublicProfile() {
       </div>
 
       {/* Right Column / Mobile Links */}
-      <div className="w-full lg:w-[60%] flex flex-col items-center justify-center px-6 pt-2 pb-6 lg:p-12 lg:h-[100dvh] lg:overflow-y-auto bg-background/50 relative z-10">
-        <main className="w-full max-w-md mx-auto flex flex-col flex-1 lg:flex-none justify-center">
+      <div className="w-full lg:w-[60%] flex flex-col items-center justify-center px-6 pt-2 pb-6 lg:p-12 lg:h-[100dvh] lg:overflow-y-auto bg-background/50 relative z-10 overflow-hidden">
+
+        {/* ── Desktop-only decorative layer ── */}
+
+        {/* Top separator — thin gold line spanning the column */}
+        <div className="hidden lg:block absolute top-0 inset-x-0 h-px pointer-events-none"
+          style={{ background: "linear-gradient(to right, transparent 0%, rgba(212,175,55,0.18) 20%, rgba(212,175,55,0.35) 50%, rgba(212,175,55,0.18) 80%, transparent 100%)" }} />
+
+        {/* Left vertical accent */}
+        <div className="hidden lg:block absolute left-0 top-1/4 w-px h-1/2 pointer-events-none"
+          style={{ background: "linear-gradient(to bottom, transparent, rgba(212,175,55,0.15) 50%, transparent)" }} />
+
+        {/* Upper-right soft glow */}
+        <div className="hidden lg:block absolute -top-32 -right-32 w-80 h-80 rounded-full pointer-events-none"
+          style={{ background: "radial-gradient(circle, rgba(212,175,55,0.04) 0%, transparent 70%)" }} />
+
+        {/* Diamond ornament — bottom left corner */}
+        <div className="hidden lg:block absolute bottom-10 left-10 pointer-events-none z-10">
+          <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+            <rect x="9" y="1" width="11" height="11" rx="0.5" transform="rotate(45 9 9)" stroke="rgba(212,175,55,0.35)" strokeWidth="0.8"/>
+            <rect x="9" y="4" width="7" height="7" rx="0.3" transform="rotate(45 9 9)" stroke="rgba(212,175,55,0.18)" strokeWidth="0.6"/>
+          </svg>
+        </div>
+
+        {/* Subtle bottom separator */}
+        <div className="hidden lg:block absolute bottom-0 inset-x-0 h-px pointer-events-none"
+          style={{ background: "linear-gradient(to right, transparent 0%, rgba(212,175,55,0.12) 40%, rgba(212,175,55,0.12) 60%, transparent 100%)" }} />
+
+        {/* Portrait — desktop only, bottom-right of right column */}
+        {vc.portraitUrl && (
+          <div
+            className="hidden lg:block absolute bottom-0 right-0 pointer-events-none z-0"
+            style={{ width: `${Math.round((vc.portraitSize ?? 50) * 0.72)}%`, height: "85%" }}
+          >
+            <img
+              src={vc.portraitUrl}
+              alt=""
+              aria-hidden="true"
+              style={{
+                position: "absolute",
+                bottom: 0,
+                right: 0,
+                width: "100%",
+                height: "100%",
+                objectFit: "cover",
+                objectPosition: "top center",
+                opacity: vc.portraitOpacity ?? 0.85,
+              }}
+            />
+            {/* Base dark tint — unifies the photo tone */}
+            <div style={{ position: "absolute", inset: 0, background: "rgba(5,3,2,0.18)" }} />
+            {/* Left fade — hard-to-soft blend into bg */}
+            <div style={{ position: "absolute", inset: 0, background: `linear-gradient(to right, rgb(10,8,6) 0%, rgba(10,8,6,0.82) ${Math.round((vc.portraitBlendLeft ?? 50) * 0.35)}%, rgba(10,8,6,0.28) ${vc.portraitBlendLeft ?? 50}%, rgba(10,8,6,0.05) 80%, transparent 100%)` }} />
+            {/* Top fade — covers at least 40% so links remain fully readable */}
+            <div style={{ position: "absolute", inset: 0, background: `linear-gradient(to bottom, rgb(10,8,6) 0%, rgba(10,8,6,0.90) 12%, rgba(10,8,6,0.55) ${vc.portraitBlendTop ?? 30}%, rgba(10,8,6,0.12) 58%, transparent 75%)` }} />
+            {/* Bottom anchor */}
+            <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to top, rgba(10,8,6,0.55) 0%, transparent 18%)" }} />
+            {/* Right edge */}
+            <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to left, rgba(10,8,6,0.20) 0%, transparent 22%)" }} />
+          </div>
+        )}
+
+        <main className="w-full max-w-md mx-auto flex flex-col flex-1 lg:flex-none justify-center relative z-10">
           
           {/* Links */}
           <motion.div 
