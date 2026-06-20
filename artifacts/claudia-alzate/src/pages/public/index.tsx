@@ -192,7 +192,7 @@ export default function PublicProfile() {
             {vc.portraitUrl && (
               <div
                 className="absolute bottom-0 right-0 pointer-events-none"
-                style={{ width: `${vc.portraitSize ?? 68}%`, height: "72%" }}
+                style={{ width: `${vc.portraitSize ?? 50}%`, height: `${Math.min(65, (vc.portraitSize ?? 50) * 1.1)}%` }}
               >
                 <img
                   src={vc.portraitUrl}
@@ -268,7 +268,7 @@ export default function PublicProfile() {
           {vc.portraitUrl && (
             <div
               className="absolute bottom-0 right-0 pointer-events-none"
-              style={{ width: `${vc.portraitSize ?? 68}%`, height: "78%" }}
+              style={{ width: `${vc.portraitSize ?? 50}%`, height: `${Math.min(70, (vc.portraitSize ?? 50) * 1.15)}%` }}
             >
               <img
                 src={vc.portraitUrl}
