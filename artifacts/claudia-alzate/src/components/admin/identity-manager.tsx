@@ -372,6 +372,50 @@ export function IdentityManager() {
                 <Label className="cursor-pointer" htmlFor="gradientBottom">Gradiente inferior</Label>
                 <Switch id="gradientBottom" checked={form.gradientBottom} onCheckedChange={v => updateField("gradientBottom", v)} />
               </div>
+
+              {/* Portrait / Foto persona */}
+              <div className="pt-4 border-t border-border space-y-4">
+                <div>
+                  <p className="text-sm font-medium text-foreground">Foto de persona (retrato)</p>
+                  <p className="text-xs text-muted-foreground mt-0.5">Se muestra abajo a la derecha en móvil y en la columna de foto en escritorio. Déjalo en blanco para ocultar.</p>
+                </div>
+                <div className="space-y-2">
+                  <Label>URL de la foto</Label>
+                  <Input
+                    value={form.portraitUrl}
+                    onChange={e => updateField("portraitUrl", e.target.value)}
+                    placeholder="https://..."
+                  />
+                </div>
+                <div className="space-y-3">
+                  <div className="flex justify-between">
+                    <Label>Opacidad</Label>
+                    <span className="text-xs text-muted-foreground">{Math.round(form.portraitOpacity * 100)}%</span>
+                  </div>
+                  <Slider value={[form.portraitOpacity]} min={0.1} max={1} step={0.05} onValueChange={v => updateField("portraitOpacity", v[0])} />
+                </div>
+                <div className="space-y-3">
+                  <div className="flex justify-between">
+                    <Label>Tamaño</Label>
+                    <span className="text-xs text-muted-foreground">{form.portraitSize}%</span>
+                  </div>
+                  <Slider value={[form.portraitSize]} min={35} max={95} step={1} onValueChange={v => updateField("portraitSize", v[0])} />
+                </div>
+                <div className="space-y-3">
+                  <div className="flex justify-between">
+                    <Label>Fusión lateral (izquierda)</Label>
+                    <span className="text-xs text-muted-foreground">{form.portraitBlendLeft}%</span>
+                  </div>
+                  <Slider value={[form.portraitBlendLeft]} min={10} max={80} step={2} onValueChange={v => updateField("portraitBlendLeft", v[0])} />
+                </div>
+                <div className="space-y-3">
+                  <div className="flex justify-between">
+                    <Label>Fusión superior</Label>
+                    <span className="text-xs text-muted-foreground">{form.portraitBlendTop}%</span>
+                  </div>
+                  <Slider value={[form.portraitBlendTop]} min={5} max={70} step={2} onValueChange={v => updateField("portraitBlendTop", v[0])} />
+                </div>
+              </div>
             </TabsContent>
           </Tabs>
 

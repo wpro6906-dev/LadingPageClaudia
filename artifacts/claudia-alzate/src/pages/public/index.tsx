@@ -263,6 +263,33 @@ export default function PublicProfile() {
           ) : (
             <div className="absolute inset-0 bg-gradient-to-b from-[#0a0806] to-background" />
           )}
+
+          {/* Desktop portrait — bottom-right of left image column */}
+          {vc.portraitUrl && (
+            <div
+              className="absolute bottom-0 right-0 pointer-events-none"
+              style={{ width: `${vc.portraitSize ?? 68}%`, height: "78%" }}
+            >
+              <img
+                src={vc.portraitUrl}
+                alt=""
+                aria-hidden="true"
+                style={{
+                  position: "absolute",
+                  bottom: 0,
+                  right: 0,
+                  width: "100%",
+                  height: "100%",
+                  objectFit: "cover",
+                  objectPosition: "top center",
+                  opacity: vc.portraitOpacity ?? 0.85,
+                }}
+              />
+              <div style={{ position: "absolute", inset: 0, background: `linear-gradient(to right, rgba(5,3,2,1) 0%, rgba(5,3,2,0.55) ${Math.round((vc.portraitBlendLeft ?? 50) * 0.5)}%, rgba(5,3,2,0.08) ${vc.portraitBlendLeft ?? 50}%, transparent 100%)` }} />
+              <div style={{ position: "absolute", inset: 0, background: `linear-gradient(to bottom, rgba(5,3,2,0.95) 0%, rgba(5,3,2,0.35) ${vc.portraitBlendTop ?? 30}%, transparent 65%)` }} />
+              <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to top, rgba(5,3,2,0.6) 0%, transparent 22%)" }} />
+            </div>
+          )}
         </div>
 
         {vc.gradientTop && (
