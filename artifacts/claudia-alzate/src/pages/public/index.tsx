@@ -121,26 +121,63 @@ export default function PublicProfile() {
   };
 
   return (
-    <div className="min-h-[100dvh] bg-background text-foreground relative flex flex-col lg:flex-row overflow-hidden lg:overflow-hidden">
-      {/* Mobile background — independent composition optimised for portrait screens */}
+    <div className="min-h-[100dvh] bg-transparent lg:bg-background text-foreground relative flex flex-col lg:flex-row overflow-hidden lg:overflow-hidden">
+      {/* Mobile background — full-bleed image with luxury gradient layers */}
       <div className="absolute inset-0 lg:hidden -z-10 overflow-hidden">
         {profile?.backgroundUrl ? (
           <>
-            <div 
-              className="absolute inset-0"
+            {/* Base image — fills entire screen, zoomed & repositioned for portrait */}
+            <img
+              src={profile.backgroundUrl}
+              alt=""
+              aria-hidden="true"
               style={{
-                backgroundImage: `url(${profile.backgroundUrl})`,
-                backgroundSize: `${(vc.mobileBgZoom || 1.15) * 100}%`,
-                backgroundPosition: vc.mobileBgPosition || "60% center",
-                backgroundRepeat: "no-repeat",
-                filter: `blur(${vc.bgBlur || 0}px)`
+                position: "absolute",
+                inset: 0,
+                width: "100%",
+                height: "100%",
+                objectFit: "cover",
+                objectPosition: vc.mobileBgPosition || "60% center",
+                transform: `scale(${vc.mobileBgZoom || 1.15})`,
+                transformOrigin: "center center",
+                filter: vc.bgBlur ? `blur(${vc.bgBlur}px)` : undefined,
               }}
             />
-            <div className="absolute inset-0 bg-black" style={{ opacity: vc.mobileBgOverlay ?? 0.52 }} />
-            {/* Strong gradient at top so text stays readable */}
-            <div className="absolute inset-x-0 top-0 h-[55%] bg-gradient-to-b from-black/80 via-black/40 to-transparent" />
-            {/* Soft gradient at bottom leading into links area */}
-            <div className="absolute inset-x-0 bottom-0 h-[30%] bg-gradient-to-t from-background/90 to-transparent" />
+            {/* Base overlay — light, just to unify tone */}
+            <div className="absolute inset-0" style={{ background: "rgba(5,3,2,0.22)" }} />
+            {/* Top vignette — enough to read text, not enough to kill the image */}
+            <div
+              className="absolute inset-x-0 top-0"
+              style={{
+                height: "48%",
+                background: "linear-gradient(to bottom, rgba(5,3,2,0.80) 0%, rgba(5,3,2,0.38) 50%, transparent 100%)",
+              }}
+            />
+            {/* Bottom cinematic fade — image melts into the dark links section */}
+            <div
+              className="absolute inset-x-0 bottom-0"
+              style={{
+                height: "52%",
+                background: "linear-gradient(to top, rgba(5,3,2,1) 0%, rgba(5,3,2,0.90) 18%, rgba(5,3,2,0.55) 50%, transparent 100%)",
+              }}
+            />
+            {/* Lateral vignette — subtle edge depth */}
+            <div
+              className="absolute inset-0"
+              style={{
+                background: "radial-gradient(ellipse 80% 70% at 50% 50%, transparent 40%, rgba(5,3,2,0.35) 100%)",
+              }}
+            />
+            {/* Warm golden shimmer in the visible image zone */}
+            <div
+              className="absolute inset-x-0"
+              style={{
+                top: "28%",
+                height: "32%",
+                background: "linear-gradient(to bottom, transparent, rgba(212,175,55,0.06), transparent)",
+                pointerEvents: "none",
+              }}
+            />
           </>
         ) : (
           <div className="absolute inset-0 bg-gradient-to-b from-[#0a0806] to-background" />
