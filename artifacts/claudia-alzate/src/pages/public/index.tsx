@@ -188,52 +188,22 @@ export default function PublicProfile() {
               }}
             />
 
-            {/* Portrait — person photo, bottom-right, blended into scene */}
+            {/* Portrait — transparent PNG, person anchored bottom-right */}
             {vc.portraitUrl && (
-              <div
+              <img
+                src={vc.portraitUrl}
+                alt=""
+                aria-hidden="true"
                 className="absolute bottom-0 right-0 pointer-events-none"
-                style={{ width: `${vc.portraitSize ?? 50}%`, height: `${Math.min(65, (vc.portraitSize ?? 50) * 1.1)}%` }}
-              >
-                <img
-                  src={vc.portraitUrl}
-                  alt=""
-                  aria-hidden="true"
-                  style={{
-                    position: "absolute",
-                    bottom: 0,
-                    right: 0,
-                    width: "100%",
-                    height: "100%",
-                    objectFit: "cover",
-                    objectPosition: "top center",
-                    opacity: vc.portraitOpacity ?? 0.85,
-                  }}
-                />
-                {/* Left blend — portrait fades into the background naturally */}
-                <div
-                  style={{
-                    position: "absolute",
-                    inset: 0,
-                    background: `linear-gradient(to right, rgba(5,3,2,1) 0%, rgba(5,3,2,0.6) ${Math.round((vc.portraitBlendLeft ?? 50) * 0.5)}%, rgba(5,3,2,0.1) ${vc.portraitBlendLeft ?? 50}%, transparent 100%)`,
-                  }}
-                />
-                {/* Top blend — fades into the dark header area */}
-                <div
-                  style={{
-                    position: "absolute",
-                    inset: 0,
-                    background: `linear-gradient(to bottom, rgba(5,3,2,0.95) 0%, rgba(5,3,2,0.4) ${vc.portraitBlendTop ?? 30}%, transparent 65%)`,
-                  }}
-                />
-                {/* Bottom blend — anchor to floor */}
-                <div
-                  style={{
-                    position: "absolute",
-                    inset: 0,
-                    background: "linear-gradient(to top, rgba(5,3,2,0.7) 0%, transparent 25%)",
-                  }}
-                />
-              </div>
+                style={{
+                  height: `${vc.portraitSize ?? 50}%`,
+                  width: "auto",
+                  maxWidth: "68%",
+                  objectFit: "contain",
+                  objectPosition: "bottom right",
+                  opacity: vc.portraitOpacity ?? 0.9,
+                }}
+              />
             )}
           </>
         ) : (
@@ -378,24 +348,8 @@ export default function PublicProfile() {
           </motion.p>
         </div>
 
-        {/* Desktop bottom bar: badge left + copyright center */}
+        {/* Desktop bottom bar: copyright only (badge moved to right column) */}
         <div className="hidden lg:flex absolute bottom-8 left-0 right-0 items-end justify-center z-10 px-8">
-          {vc.badgeText && (
-            <motion.div
-              initial={{ opacity: 0, y: 8 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.9 }}
-              className="absolute left-8 flex items-center gap-2 bg-black/40 backdrop-blur-md border border-white/10 rounded-full px-3 py-1.5"
-            >
-              <BadgeIcon className="w-3 h-3 shrink-0" style={{ color: vc.badgeColor }} />
-              <span
-                className="text-[11px] font-sans font-medium"
-                style={{ color: vc.badgeColor, fontFamily: "'Montserrat', sans-serif" }}
-              >
-                {vc.badgeText}
-              </span>
-            </motion.div>
-          )}
           <p className="text-[10px] text-muted-foreground/60 font-sans tracking-widest uppercase">
             © {new Date().getFullYear()} {vc.firstName} {vc.lastName}
           </p>
@@ -407,62 +361,55 @@ export default function PublicProfile() {
 
         {/* ── Desktop-only decorative layer ── */}
 
-        {/* Top separator — thin gold line spanning the column */}
-        <div className="hidden lg:block absolute top-0 inset-x-0 h-px pointer-events-none"
-          style={{ background: "linear-gradient(to right, transparent 0%, rgba(212,175,55,0.18) 20%, rgba(212,175,55,0.35) 50%, rgba(212,175,55,0.18) 80%, transparent 100%)" }} />
+        {/* Top gold separator line */}
+        <div className="hidden lg:block absolute top-0 inset-x-0 pointer-events-none" style={{ height: "2px", background: "linear-gradient(to right, transparent 0%, rgba(212,175,55,0.22) 15%, rgba(212,175,55,0.55) 50%, rgba(212,175,55,0.22) 85%, transparent 100%)" }} />
 
-        {/* Left vertical accent */}
+        {/* Top-right corner bracket */}
+        <div className="hidden lg:block absolute top-7 right-7 pointer-events-none z-10">
+          <div style={{ width: 36, height: 1, background: "linear-gradient(to left, rgba(212,175,55,0.7), transparent)", marginLeft: "auto" }} />
+          <div style={{ width: 1, height: 36, background: "linear-gradient(to bottom, rgba(212,175,55,0.7), transparent)", marginLeft: "auto" }} />
+        </div>
+
+        {/* Top-left corner bracket */}
+        <div className="hidden lg:block absolute top-7 left-7 pointer-events-none z-10">
+          <div style={{ width: 36, height: 1, background: "linear-gradient(to right, rgba(212,175,55,0.7), transparent)" }} />
+          <div style={{ width: 1, height: 36, background: "linear-gradient(to bottom, rgba(212,175,55,0.7), transparent)" }} />
+        </div>
+
+        {/* Left vertical accent line */}
         <div className="hidden lg:block absolute left-0 top-1/4 w-px h-1/2 pointer-events-none"
-          style={{ background: "linear-gradient(to bottom, transparent, rgba(212,175,55,0.15) 50%, transparent)" }} />
+          style={{ background: "linear-gradient(to bottom, transparent, rgba(212,175,55,0.28) 50%, transparent)" }} />
 
-        {/* Upper-right soft glow */}
-        <div className="hidden lg:block absolute -top-32 -right-32 w-80 h-80 rounded-full pointer-events-none"
-          style={{ background: "radial-gradient(circle, rgba(212,175,55,0.04) 0%, transparent 70%)" }} />
+        {/* Soft gold glow — upper center */}
+        <div className="hidden lg:block absolute top-0 left-1/2 -translate-x-1/2 pointer-events-none"
+          style={{ width: 320, height: 180, background: "radial-gradient(ellipse at top, rgba(212,175,55,0.07) 0%, transparent 70%)" }} />
 
-        {/* Diamond ornament — bottom left corner */}
-        <div className="hidden lg:block absolute bottom-10 left-10 pointer-events-none z-10">
-          <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
-            <rect x="9" y="1" width="11" height="11" rx="0.5" transform="rotate(45 9 9)" stroke="rgba(212,175,55,0.35)" strokeWidth="0.8"/>
-            <rect x="9" y="4" width="7" height="7" rx="0.3" transform="rotate(45 9 9)" stroke="rgba(212,175,55,0.18)" strokeWidth="0.6"/>
+        {/* Diamond ornament — top center */}
+        <div className="hidden lg:block absolute top-6 left-1/2 -translate-x-1/2 pointer-events-none z-10">
+          <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
+            <rect x="5" y="0.7" width="6.5" height="6.5" rx="0.3" transform="rotate(45 5 5)" stroke="rgba(212,175,55,0.65)" strokeWidth="0.8"/>
           </svg>
         </div>
 
-        {/* Subtle bottom separator */}
-        <div className="hidden lg:block absolute bottom-0 inset-x-0 h-px pointer-events-none"
-          style={{ background: "linear-gradient(to right, transparent 0%, rgba(212,175,55,0.12) 40%, rgba(212,175,55,0.12) 60%, transparent 100%)" }} />
+        {/* Bottom separator */}
+        <div className="hidden lg:block absolute bottom-0 inset-x-0 pointer-events-none" style={{ height: "1px", background: "linear-gradient(to right, transparent 0%, rgba(212,175,55,0.25) 30%, rgba(212,175,55,0.25) 70%, transparent 100%)" }} />
 
-        {/* Portrait — desktop only, bottom-right of right column */}
+        {/* Portrait — desktop only, transparent PNG anchored bottom-right */}
         {vc.portraitUrl && (
-          <div
+          <img
+            src={vc.portraitUrl}
+            alt=""
+            aria-hidden="true"
             className="hidden lg:block absolute bottom-0 right-0 pointer-events-none z-0"
-            style={{ width: `${Math.round((vc.portraitSize ?? 50) * 0.72)}%`, height: "85%" }}
-          >
-            <img
-              src={vc.portraitUrl}
-              alt=""
-              aria-hidden="true"
-              style={{
-                position: "absolute",
-                bottom: 0,
-                right: 0,
-                width: "100%",
-                height: "100%",
-                objectFit: "cover",
-                objectPosition: "top center",
-                opacity: vc.portraitOpacity ?? 0.85,
-              }}
-            />
-            {/* Base dark tint — unifies the photo tone */}
-            <div style={{ position: "absolute", inset: 0, background: "rgba(5,3,2,0.18)" }} />
-            {/* Left fade — hard-to-soft blend into bg */}
-            <div style={{ position: "absolute", inset: 0, background: `linear-gradient(to right, rgb(10,8,6) 0%, rgba(10,8,6,0.82) ${Math.round((vc.portraitBlendLeft ?? 50) * 0.35)}%, rgba(10,8,6,0.28) ${vc.portraitBlendLeft ?? 50}%, rgba(10,8,6,0.05) 80%, transparent 100%)` }} />
-            {/* Top fade — covers at least 40% so links remain fully readable */}
-            <div style={{ position: "absolute", inset: 0, background: `linear-gradient(to bottom, rgb(10,8,6) 0%, rgba(10,8,6,0.90) 12%, rgba(10,8,6,0.55) ${vc.portraitBlendTop ?? 30}%, rgba(10,8,6,0.12) 58%, transparent 75%)` }} />
-            {/* Bottom anchor */}
-            <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to top, rgba(10,8,6,0.55) 0%, transparent 18%)" }} />
-            {/* Right edge */}
-            <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to left, rgba(10,8,6,0.20) 0%, transparent 22%)" }} />
-          </div>
+            style={{
+              height: `${Math.min(96, (vc.portraitSize ?? 50) * 1.6)}%`,
+              width: "auto",
+              maxWidth: "50%",
+              objectFit: "contain",
+              objectPosition: "bottom right",
+              opacity: vc.portraitOpacity ?? 0.9,
+            }}
+          />
         )}
 
         <main className="w-full max-w-md mx-auto flex flex-col flex-1 lg:flex-none justify-center relative z-10">
@@ -520,6 +467,24 @@ export default function PublicProfile() {
             )}
           </motion.div>
         </main>
+
+        {/* Desktop badge — bottom-left of right column, above portrait area */}
+        {vc.badgeText && (
+          <motion.div
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.9 }}
+            className="hidden lg:flex absolute bottom-8 left-8 z-20 items-center gap-2 bg-black/50 backdrop-blur-md border border-primary/20 rounded-full px-3.5 py-2"
+          >
+            <BadgeIcon className="w-3.5 h-3.5 shrink-0" style={{ color: vc.badgeColor }} />
+            <span
+              className="text-[11px] font-medium leading-none"
+              style={{ color: vc.badgeColor, fontFamily: "'Montserrat', sans-serif" }}
+            >
+              {vc.badgeText}
+            </span>
+          </motion.div>
+        )}
 
         {/* Footer (Mobile only, Desktop handles it in left col) */}
         <footer className="lg:hidden py-10 text-center w-full mt-auto flex flex-col items-center border-t border-primary/10">
