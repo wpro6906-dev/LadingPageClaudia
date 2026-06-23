@@ -9,6 +9,8 @@ import { logger } from "./lib/logger";
 const app: Express = express();
 
 const SESSION_SECRET = process.env.SESSION_SECRET || "claudia-alzate-secret-key";
+const IS_PROD = process.env.NODE_ENV === "production";
+
 const sessions = new Map<string, { adminId: number; username: string }>();
 const userSessions = new Map<string, { username: string }>();
 
@@ -31,7 +33,23 @@ app.use(
     },
   }),
 );
-app.use(cors({ origin: true, credentials: true }));
+
+const allowedOrigins = process.env.ALLOWED_ORIGINS
+  ? process.env.ALLOWED_ORIGINS.split(",").map((o) => o.trim())
+  : null;
+
+app.use(
+  cors({
+    origin: (origin, callback) => {
+      if (!origin) return callback(null, true);
+      if (!allowedOrigins) return callback(null, true);
+      if (allowedOrigins.includes(origin)) return callback(null, true);
+      callback(new Error(`CORS: origin ${origin} not allowed`));
+    },
+    credentials: true,
+  }),
+);
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser(SESSION_SECRET));
@@ -56,6 +74,13 @@ app.use((req: any, _res, next) => {
   next();
 });
 
+const cookieOptions = {
+  httpOnly: true,
+  sameSite: (IS_PROD ? "none" : "lax") as "none" | "lax",
+  secure: IS_PROD,
+  maxAge: 7 * 24 * 60 * 60 * 1000,
+};
+
 app.use((req: any, res: any, next) => {
   const originalJson = res.json.bind(res);
   const originalEnd = res.end.bind(res);
@@ -67,11 +92,7 @@ app.use((req: any, res: any, next) => {
     } else if (req.session && !req._sessionToken) {
       const token = crypto.randomBytes(32).toString("hex");
       sessions.set(token, req.session);
-      res.cookie("session", token, {
-        httpOnly: true,
-        sameSite: "lax",
-        maxAge: 7 * 24 * 60 * 60 * 1000,
-      });
+      res.cookie("session", token, cookieOptions);
     }
 
     if (req.userSession === null && req._userSessionToken) {
@@ -80,11 +101,7 @@ app.use((req: any, res: any, next) => {
     } else if (req.userSession && !req._userSessionToken) {
       const token = crypto.randomBytes(32).toString("hex");
       userSessions.set(token, req.userSession);
-      res.cookie("user-session", token, {
-        httpOnly: true,
-        sameSite: "lax",
-        maxAge: 7 * 24 * 60 * 60 * 1000,
-      });
+      res.cookie("user-session", token, cookieOptions);
     }
   };
 
