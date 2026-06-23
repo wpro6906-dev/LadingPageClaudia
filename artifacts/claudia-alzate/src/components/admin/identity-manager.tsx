@@ -541,15 +541,31 @@ export function IdentityManager() {
                         <p className="text-[10px] text-muted-foreground">Íconos: mappin, home, star, users, key, building2, phone, mail, globe</p>
                       </div>
                     ))}
-                    <Button
-                      type="button"
-                      variant="outline"
-                      size="sm"
-                      className="w-full border-primary/20 text-muted-foreground hover:text-foreground"
-                      onClick={() => updateField("stats", [...form.stats, { icon: "star", value: "", label: "Nueva estadística", enabled: true }])}
-                    >
-                      + Agregar estadística
-                    </Button>
+                    <div className="flex gap-2">
+                      <Button
+                        type="button"
+                        variant="outline"
+                        size="sm"
+                        className="flex-1 border-primary/20 text-muted-foreground hover:text-foreground"
+                        onClick={() => updateField("stats", [...form.stats, { icon: "star", value: "", label: "Nueva estadística", enabled: true }])}
+                      >
+                        + Agregar estadística
+                      </Button>
+                      <Button
+                        type="button"
+                        variant="outline"
+                        size="sm"
+                        className="border-destructive/30 text-destructive/70 hover:text-destructive hover:border-destructive/60 hover:bg-destructive/5"
+                        onClick={() => updateField("stats", [
+                          { icon: "mappin", value: "", label: "Miami, FL", enabled: true },
+                          { icon: "home", value: "150+", label: "Propiedades Vendidas", enabled: true },
+                          { icon: "star", value: "10+", label: "Años de Experiencia", enabled: true },
+                          { icon: "users", value: "500+", label: "Clientes Satisfechos", enabled: true },
+                        ])}
+                      >
+                        Reiniciar
+                      </Button>
+                    </div>
                   </div>
                 )}
               </div>
