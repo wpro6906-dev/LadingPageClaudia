@@ -402,9 +402,9 @@ export default function PublicProfile() {
             aria-hidden="true"
             className="hidden lg:block absolute bottom-0 right-0 pointer-events-none z-0"
             style={{
-              height: "90%",
+              height: "72%",
               width: "auto",
-              maxWidth: "55%",
+              maxWidth: "40%",
               objectFit: "contain",
               objectPosition: "bottom right",
               opacity: vc.portraitOpacity ?? 0.9,
@@ -412,7 +412,7 @@ export default function PublicProfile() {
           />
         )}
 
-        <main className="w-full max-w-md mx-auto lg:mx-0 lg:ml-10 lg:mr-auto flex flex-col flex-1 lg:flex-none justify-center relative z-10">
+        <main className="w-full max-w-sm mx-auto lg:mx-0 lg:ml-14 lg:mr-auto flex flex-col flex-1 lg:flex-none justify-center relative z-10">
           
           {/* Links */}
           <motion.div 
