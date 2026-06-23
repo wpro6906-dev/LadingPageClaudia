@@ -447,8 +447,8 @@ export function IdentityManager() {
               {/* Background phrase */}
               <div className="space-y-4">
                 <div>
-                  <p className="text-sm font-medium text-foreground">Frase decorativa de fondo</p>
-                  <p className="text-xs text-muted-foreground mt-0.5">Aparece en grande y muy tenue detrás de los botones en escritorio.</p>
+                  <p className="text-sm font-medium text-foreground">Frase destacada (escritorio)</p>
+                  <p className="text-xs text-muted-foreground mt-0.5">Aparece en la zona superior derecha, con tipografía elegante y alineación a la derecha, justo encima del retrato.</p>
                 </div>
                 <div className="flex items-center justify-between">
                   <Label htmlFor="bgPhraseEnabled">Mostrar frase decorativa</Label>
@@ -469,8 +469,8 @@ export function IdentityManager() {
                         <Label>Opacidad</Label>
                         <span className="text-xs text-muted-foreground">{Math.round(form.bgPhraseOpacity * 100)}%</span>
                       </div>
-                      <Slider value={[form.bgPhraseOpacity]} min={0.01} max={0.18} step={0.01} onValueChange={v => updateField("bgPhraseOpacity", v[0])} />
-                      <p className="text-xs text-muted-foreground">Valor recomendado: 3–6%</p>
+                      <Slider value={[form.bgPhraseOpacity]} min={0.3} max={1} step={0.05} onValueChange={v => updateField("bgPhraseOpacity", v[0])} />
+                      <p className="text-xs text-muted-foreground">Valor recomendado: 80–95%</p>
                     </div>
                   </div>
                 )}

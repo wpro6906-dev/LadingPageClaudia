@@ -64,7 +64,7 @@ function getVC(profile: any): Required<VisualConfig> {
     badgeText: "", badgeIcon: "mappin", badgeColor: "#D4B483",
     portraitUrl: "", portraitOpacity: 0.85, portraitSize: 68,
     portraitBlendLeft: 50, portraitBlendTop: 30,
-    bgPhrase: "Luxury Real Estate", bgPhraseEnabled: true, bgPhraseOpacity: 0.04,
+    bgPhrase: "Luxury Real Estate", bgPhraseEnabled: true, bgPhraseOpacity: 0.88,
     statsEnabled: true,
     stats: [
       { icon: "mappin", value: "", label: "Miami, FL", enabled: true },
@@ -425,29 +425,34 @@ export default function PublicProfile() {
           />
         )}
 
-        {/* ── Decorative background phrase — desktop only ── */}
+        {/* ── Quote block — desktop only, upper-right, above portrait ── */}
         {vc.bgPhraseEnabled !== false && vc.bgPhrase && (
-          <div
-            aria-hidden="true"
-            className="hidden lg:flex absolute inset-0 items-center justify-center pointer-events-none z-0 overflow-hidden"
+          <motion.div
+            initial={{ opacity: 0, x: 16 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.8, delay: 0.6 }}
+            className="hidden lg:flex absolute top-[14%] right-10 flex-col items-end pointer-events-none z-10 max-w-[220px]"
           >
-            <span
+            {/* Top accent line */}
+            <div className="w-8 h-px mb-3" style={{ background: "linear-gradient(to left, rgba(212,175,55,0.9), transparent)" }} />
+            <p
               style={{
                 fontFamily: "'Cormorant Garamond', serif",
-                fontSize: "clamp(4.5rem, 7.5vw, 8rem)",
+                fontSize: "clamp(1.1rem, 1.6vw, 1.5rem)",
                 fontWeight: 300,
                 fontStyle: "italic",
-                letterSpacing: "0.06em",
-                opacity: vc.bgPhraseOpacity ?? 0.04,
+                lineHeight: 1.45,
+                letterSpacing: "0.02em",
+                opacity: vc.bgPhraseOpacity ?? 0.88,
                 color: "#D4B483",
-                whiteSpace: "nowrap",
-                transform: "rotate(-5deg)",
-                userSelect: "none",
+                textAlign: "right",
               }}
             >
               {vc.bgPhrase}
-            </span>
-          </div>
+            </p>
+            {/* Bottom accent line */}
+            <div className="w-5 h-px mt-3" style={{ background: "linear-gradient(to left, rgba(212,175,55,0.5), transparent)" }} />
+          </motion.div>
         )}
 
         <main className="w-full max-w-sm mx-auto lg:mx-0 lg:ml-14 lg:mr-auto flex flex-col flex-1 lg:flex-none justify-center relative z-10">
