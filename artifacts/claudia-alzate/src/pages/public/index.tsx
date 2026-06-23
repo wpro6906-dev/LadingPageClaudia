@@ -361,54 +361,38 @@ export default function PublicProfile() {
 
         {/* ── Desktop-only decorative layer ── */}
 
-        {/* Dot-grid texture — luxury wallpaper feel */}
-        <div className="hidden lg:block absolute inset-0 pointer-events-none"
-          style={{
-            backgroundImage: "radial-gradient(circle, rgba(212,175,55,0.07) 1px, transparent 1px)",
-            backgroundSize: "28px 28px",
-            maskImage: "radial-gradient(ellipse 85% 80% at 38% 50%, black 30%, transparent 100%)",
-            WebkitMaskImage: "radial-gradient(ellipse 85% 80% at 38% 50%, black 30%, transparent 100%)",
-          }} />
-
-        {/* Deep warm glow — center-left, behind the links */}
-        <div className="hidden lg:block absolute inset-0 pointer-events-none"
-          style={{ background: "radial-gradient(ellipse 70% 60% at 34% 50%, rgba(180,130,20,0.09) 0%, rgba(212,175,55,0.03) 55%, transparent 100%)" }} />
-
-        {/* Secondary glow — upper right (portrait side warmth) */}
-        <div className="hidden lg:block absolute inset-0 pointer-events-none"
-          style={{ background: "radial-gradient(ellipse 50% 45% at 80% 30%, rgba(212,175,55,0.05) 0%, transparent 100%)" }} />
-
-        {/* Top gold separator */}
-        <div className="hidden lg:block absolute top-0 inset-x-0 pointer-events-none"
-          style={{ height: "1px", background: "linear-gradient(to right, transparent 0%, rgba(212,175,55,0.25) 20%, rgba(212,175,55,0.55) 50%, rgba(212,175,55,0.25) 80%, transparent 100%)" }} />
-
-        {/* Bottom gold separator */}
-        <div className="hidden lg:block absolute bottom-0 inset-x-0 pointer-events-none"
-          style={{ height: "1px", background: "linear-gradient(to right, transparent 0%, rgba(212,175,55,0.18) 20%, rgba(212,175,55,0.4) 50%, rgba(212,175,55,0.18) 80%, transparent 100%)" }} />
-
-        {/* Top-left corner bracket */}
-        <div className="hidden lg:block absolute top-7 left-7 pointer-events-none z-10">
-          <div style={{ width: 40, height: 1, background: "linear-gradient(to right, rgba(212,175,55,0.7), transparent)" }} />
-          <div style={{ width: 1, height: 40, background: "linear-gradient(to bottom, rgba(212,175,55,0.7), transparent)" }} />
-        </div>
+        {/* Top gold separator line */}
+        <div className="hidden lg:block absolute top-0 inset-x-0 pointer-events-none" style={{ height: "2px", background: "linear-gradient(to right, transparent 0%, rgba(212,175,55,0.22) 15%, rgba(212,175,55,0.55) 50%, rgba(212,175,55,0.22) 85%, transparent 100%)" }} />
 
         {/* Top-right corner bracket */}
         <div className="hidden lg:block absolute top-7 right-7 pointer-events-none z-10">
-          <div style={{ width: 40, height: 1, background: "linear-gradient(to left, rgba(212,175,55,0.7), transparent)", marginLeft: "auto" }} />
-          <div style={{ width: 1, height: 40, background: "linear-gradient(to bottom, rgba(212,175,55,0.7), transparent)", marginLeft: "auto" }} />
+          <div style={{ width: 36, height: 1, background: "linear-gradient(to left, rgba(212,175,55,0.7), transparent)", marginLeft: "auto" }} />
+          <div style={{ width: 1, height: 36, background: "linear-gradient(to bottom, rgba(212,175,55,0.7), transparent)", marginLeft: "auto" }} />
         </div>
 
-        {/* Bottom-left corner bracket */}
-        <div className="hidden lg:block absolute bottom-7 left-7 pointer-events-none z-10">
-          <div style={{ width: 1, height: 40, background: "linear-gradient(to top, rgba(212,175,55,0.7), transparent)" }} />
-          <div style={{ width: 40, height: 1, background: "linear-gradient(to right, rgba(212,175,55,0.7), transparent)" }} />
+        {/* Top-left corner bracket */}
+        <div className="hidden lg:block absolute top-7 left-7 pointer-events-none z-10">
+          <div style={{ width: 36, height: 1, background: "linear-gradient(to right, rgba(212,175,55,0.7), transparent)" }} />
+          <div style={{ width: 1, height: 36, background: "linear-gradient(to bottom, rgba(212,175,55,0.7), transparent)" }} />
         </div>
 
-        {/* Bottom-right corner bracket */}
-        <div className="hidden lg:block absolute bottom-7 right-7 pointer-events-none z-10">
-          <div style={{ width: 1, height: 40, background: "linear-gradient(to top, rgba(212,175,55,0.7), transparent)", marginLeft: "auto" }} />
-          <div style={{ width: 40, height: 1, background: "linear-gradient(to left, rgba(212,175,55,0.7), transparent)", marginLeft: "auto" }} />
+        {/* Left vertical accent line */}
+        <div className="hidden lg:block absolute left-0 top-1/4 w-px h-1/2 pointer-events-none"
+          style={{ background: "linear-gradient(to bottom, transparent, rgba(212,175,55,0.28) 50%, transparent)" }} />
+
+        {/* Soft gold glow — upper center */}
+        <div className="hidden lg:block absolute top-0 left-1/2 -translate-x-1/2 pointer-events-none"
+          style={{ width: 320, height: 180, background: "radial-gradient(ellipse at top, rgba(212,175,55,0.07) 0%, transparent 70%)" }} />
+
+        {/* Diamond ornament — top center */}
+        <div className="hidden lg:block absolute top-6 left-1/2 -translate-x-1/2 pointer-events-none z-10">
+          <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
+            <rect x="5" y="0.7" width="6.5" height="6.5" rx="0.3" transform="rotate(45 5 5)" stroke="rgba(212,175,55,0.65)" strokeWidth="0.8"/>
+          </svg>
         </div>
+
+        {/* Bottom separator */}
+        <div className="hidden lg:block absolute bottom-0 inset-x-0 pointer-events-none" style={{ height: "1px", background: "linear-gradient(to right, transparent 0%, rgba(212,175,55,0.25) 30%, rgba(212,175,55,0.25) 70%, transparent 100%)" }} />
 
         {/* Portrait — desktop only, large transparent PNG anchored bottom-right */}
         {vc.portraitUrl && (
