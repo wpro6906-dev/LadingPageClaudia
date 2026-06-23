@@ -361,79 +361,54 @@ export default function PublicProfile() {
 
         {/* ── Desktop-only decorative layer ── */}
 
-        {/* Ambient warm background — breaks the pure black */}
+        {/* Dot-grid texture — luxury wallpaper feel */}
         <div className="hidden lg:block absolute inset-0 pointer-events-none"
-          style={{ background: "radial-gradient(ellipse 80% 65% at 32% 52%, rgba(212,175,55,0.045) 0%, rgba(212,175,55,0.01) 60%, transparent 100%)" }} />
+          style={{
+            backgroundImage: "radial-gradient(circle, rgba(212,175,55,0.07) 1px, transparent 1px)",
+            backgroundSize: "28px 28px",
+            maskImage: "radial-gradient(ellipse 85% 80% at 38% 50%, black 30%, transparent 100%)",
+            WebkitMaskImage: "radial-gradient(ellipse 85% 80% at 38% 50%, black 30%, transparent 100%)",
+          }} />
 
-        {/* Large glow centered on links zone */}
-        <div className="hidden lg:block absolute pointer-events-none"
-          style={{ top: "50%", left: "33%", transform: "translate(-50%, -50%)", width: 520, height: 420, background: "radial-gradient(ellipse, rgba(212,175,55,0.06) 0%, rgba(212,175,55,0.02) 45%, transparent 70%)" }} />
+        {/* Deep warm glow — center-left, behind the links */}
+        <div className="hidden lg:block absolute inset-0 pointer-events-none"
+          style={{ background: "radial-gradient(ellipse 70% 60% at 34% 50%, rgba(180,130,20,0.09) 0%, rgba(212,175,55,0.03) 55%, transparent 100%)" }} />
 
-        {/* Top gold separator — 2px visible line */}
+        {/* Secondary glow — upper right (portrait side warmth) */}
+        <div className="hidden lg:block absolute inset-0 pointer-events-none"
+          style={{ background: "radial-gradient(ellipse 50% 45% at 80% 30%, rgba(212,175,55,0.05) 0%, transparent 100%)" }} />
+
+        {/* Top gold separator */}
         <div className="hidden lg:block absolute top-0 inset-x-0 pointer-events-none"
-          style={{ height: "2px", background: "linear-gradient(to right, transparent 0%, rgba(212,175,55,0.25) 15%, rgba(212,175,55,0.6) 50%, rgba(212,175,55,0.25) 85%, transparent 100%)" }} />
+          style={{ height: "1px", background: "linear-gradient(to right, transparent 0%, rgba(212,175,55,0.25) 20%, rgba(212,175,55,0.55) 50%, rgba(212,175,55,0.25) 80%, transparent 100%)" }} />
+
+        {/* Bottom gold separator */}
+        <div className="hidden lg:block absolute bottom-0 inset-x-0 pointer-events-none"
+          style={{ height: "1px", background: "linear-gradient(to right, transparent 0%, rgba(212,175,55,0.18) 20%, rgba(212,175,55,0.4) 50%, rgba(212,175,55,0.18) 80%, transparent 100%)" }} />
 
         {/* Top-left corner bracket */}
         <div className="hidden lg:block absolute top-7 left-7 pointer-events-none z-10">
-          <div style={{ width: 40, height: 1, background: "linear-gradient(to right, rgba(212,175,55,0.75), transparent)" }} />
-          <div style={{ width: 1, height: 40, background: "linear-gradient(to bottom, rgba(212,175,55,0.75), transparent)" }} />
+          <div style={{ width: 40, height: 1, background: "linear-gradient(to right, rgba(212,175,55,0.7), transparent)" }} />
+          <div style={{ width: 1, height: 40, background: "linear-gradient(to bottom, rgba(212,175,55,0.7), transparent)" }} />
         </div>
 
         {/* Top-right corner bracket */}
         <div className="hidden lg:block absolute top-7 right-7 pointer-events-none z-10">
-          <div style={{ width: 40, height: 1, background: "linear-gradient(to left, rgba(212,175,55,0.75), transparent)", marginLeft: "auto" }} />
-          <div style={{ width: 1, height: 40, background: "linear-gradient(to bottom, rgba(212,175,55,0.75), transparent)", marginLeft: "auto" }} />
+          <div style={{ width: 40, height: 1, background: "linear-gradient(to left, rgba(212,175,55,0.7), transparent)", marginLeft: "auto" }} />
+          <div style={{ width: 1, height: 40, background: "linear-gradient(to bottom, rgba(212,175,55,0.7), transparent)", marginLeft: "auto" }} />
         </div>
 
         {/* Bottom-left corner bracket */}
         <div className="hidden lg:block absolute bottom-7 left-7 pointer-events-none z-10">
-          <div style={{ width: 1, height: 40, background: "linear-gradient(to top, rgba(212,175,55,0.75), transparent)" }} />
-          <div style={{ width: 40, height: 1, background: "linear-gradient(to right, rgba(212,175,55,0.75), transparent)" }} />
+          <div style={{ width: 1, height: 40, background: "linear-gradient(to top, rgba(212,175,55,0.7), transparent)" }} />
+          <div style={{ width: 40, height: 1, background: "linear-gradient(to right, rgba(212,175,55,0.7), transparent)" }} />
         </div>
 
-        {/* Left vertical accent */}
-        <div className="hidden lg:block absolute left-0 top-1/4 w-px h-1/2 pointer-events-none"
-          style={{ background: "linear-gradient(to bottom, transparent, rgba(212,175,55,0.32) 50%, transparent)" }} />
-
-        {/* Horizontal rail ABOVE the buttons zone */}
-        <div className="hidden lg:block absolute pointer-events-none"
-          style={{ top: "26%", left: "3%", right: "46%", height: "1px", background: "linear-gradient(to right, rgba(212,175,55,0.5), rgba(212,175,55,0.18) 60%, transparent)" }} />
-
-        {/* Horizontal rail BELOW the buttons zone */}
-        <div className="hidden lg:block absolute pointer-events-none"
-          style={{ bottom: "26%", left: "3%", right: "46%", height: "1px", background: "linear-gradient(to right, rgba(212,175,55,0.5), rgba(212,175,55,0.18) 60%, transparent)" }} />
-
-        {/* Small tick marks at rail ends — top */}
-        <div className="hidden lg:block absolute pointer-events-none"
-          style={{ top: "calc(26% - 5px)", left: "3%", width: "1px", height: "11px", background: "rgba(212,175,55,0.5)" }} />
-
-        {/* Small tick marks at rail ends — bottom */}
-        <div className="hidden lg:block absolute pointer-events-none"
-          style={{ bottom: "calc(26% - 5px)", left: "3%", width: "1px", height: "11px", background: "rgba(212,175,55,0.5)" }} />
-
-        {/* Diamond ornament — top center of left half */}
-        <div className="hidden lg:block absolute pointer-events-none z-10"
-          style={{ top: "calc(26% - 10px)", left: "3%", transform: "translateX(40px)" }}>
-          <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
-            <rect x="5" y="0.7" width="6.5" height="6.5" rx="0.3" transform="rotate(45 5 5)" stroke="rgba(212,175,55,0.6)" strokeWidth="0.9"/>
-          </svg>
+        {/* Bottom-right corner bracket */}
+        <div className="hidden lg:block absolute bottom-7 right-7 pointer-events-none z-10">
+          <div style={{ width: 1, height: 40, background: "linear-gradient(to top, rgba(212,175,55,0.7), transparent)", marginLeft: "auto" }} />
+          <div style={{ width: 40, height: 1, background: "linear-gradient(to left, rgba(212,175,55,0.7), transparent)", marginLeft: "auto" }} />
         </div>
-
-        {/* Diamond ornament — bottom */}
-        <div className="hidden lg:block absolute pointer-events-none z-10"
-          style={{ bottom: "calc(26% - 10px)", left: "3%", transform: "translateX(40px)" }}>
-          <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
-            <rect x="5" y="0.7" width="6.5" height="6.5" rx="0.3" transform="rotate(45 5 5)" stroke="rgba(212,175,55,0.6)" strokeWidth="0.9"/>
-          </svg>
-        </div>
-
-        {/* Subtle vertical separator between links and portrait zone */}
-        <div className="hidden lg:block absolute top-1/4 bottom-1/4 pointer-events-none"
-          style={{ left: "58%", width: "1px", background: "linear-gradient(to bottom, transparent, rgba(212,175,55,0.12) 30%, rgba(212,175,55,0.12) 70%, transparent)" }} />
-
-        {/* Bottom separator */}
-        <div className="hidden lg:block absolute bottom-0 inset-x-0 pointer-events-none"
-          style={{ height: "2px", background: "linear-gradient(to right, transparent 0%, rgba(212,175,55,0.25) 20%, rgba(212,175,55,0.5) 50%, rgba(212,175,55,0.25) 80%, transparent 100%)" }} />
 
         {/* Portrait — desktop only, large transparent PNG anchored bottom-right */}
         {vc.portraitUrl && (
