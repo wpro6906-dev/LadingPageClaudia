@@ -2,11 +2,9 @@ import { Router } from "express";
 import { db, adminTable } from "@workspace/db";
 import { eq } from "drizzle-orm";
 import { z } from "zod";
-import { createAdminSession, createUserSession } from "../lib/session-store";
+import { createAdminSession } from "../lib/session-store";
 
 const router = Router();
-
-const USER_CREDENTIALS = { username: "claudyalzate", password: "claudy321" };
 
 const loginSchema = z.object({
   username: z.string().min(1),
@@ -40,14 +38,7 @@ router.post("/auth/login", async (req, res) => {
   }
   const { username, password } = parsed.data;
 
-  // Check dashboard user credentials
-  if (username === USER_CREDENTIALS.username && password === USER_CREDENTIALS.password) {
-    const token = createUserSession({ username });
-    req.log.info({ username }, "User logged in via unified login");
-    return res.json({ username, role: "user", token });
-  }
-
-  // Check admin credentials in DB with env fallback
+  // Try DB first
   try {
     const [admin] = await db.select().from(adminTable).where(eq(adminTable.username, username));
     if (admin && admin.password === password) {
@@ -57,13 +48,15 @@ router.post("/auth/login", async (req, res) => {
     }
   } catch (err) {
     req.log.error({ err }, "DB error during admin login — trying env fallback");
-    const envUser = process.env.ADMIN_USERNAME || "admin";
-    const envPass = process.env.ADMIN_PASSWORD || "admin123";
-    if (username === envUser && password === envPass) {
-      const token = createAdminSession({ adminId: 1, username });
-      req.log.info({ username }, "Admin logged in via env fallback");
-      return res.json({ username, role: "admin", token });
-    }
+  }
+
+  // Env / hardcoded fallback
+  const envUser = process.env.ADMIN_USERNAME || "ClaudiaAlzate";
+  const envPass = process.env.ADMIN_PASSWORD || "Claudia123";
+  if (username === envUser && password === envPass) {
+    const token = createAdminSession({ adminId: 1, username });
+    req.log.info({ username }, "Admin logged in via env fallback");
+    return res.json({ username, role: "admin", token });
   }
 
   return res.status(401).json({ error: "Invalid credentials" });
