@@ -182,6 +182,14 @@ export const GetAnalyticsResponse = zod.object({
 
 
 /**
+ * @summary Delete all analytics data (admin only)
+ */
+export const ResetAnalyticsResponse = zod.object({
+  "ok": zod.boolean().optional()
+})
+
+
+/**
  * @summary Reorder links (admin only)
  */
 export const ReorderLinksBody = zod.object({

@@ -238,6 +238,23 @@ paths:
         "401":
           description: Not authenticated
 
+    delete:
+      operationId: resetAnalytics
+      tags: [analytics]
+      summary: Delete all analytics data (admin only)
+      responses:
+        "200":
+          description: Analytics reset
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ok:
+                    type: boolean
+        "401":
+          description: Not authenticated
+
   /links/reorder:
     patch:
       operationId: reorderLinks

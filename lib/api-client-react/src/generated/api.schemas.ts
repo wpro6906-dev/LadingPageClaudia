@@ -121,3 +121,7 @@ export interface AnalyticsSummary {
   links: AnalyticsLinkStat[];
 }
 
+export type ResetAnalytics200 = {
+  ok?: boolean;
+};
+

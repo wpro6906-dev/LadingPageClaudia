@@ -20,5 +20,6 @@ export * from './profile';
 export * from './profileUpdate';
 export * from './profileUpdateVisualConfig';
 export * from './profileVisualConfig';
+export * from './resetAnalytics200';
 export * from './trackEventInput';
 export * from './trackEventInputType';

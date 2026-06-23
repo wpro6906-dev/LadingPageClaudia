@@ -70,4 +70,9 @@ router.get("/analytics", requireAuth, async (req, res) => {
   });
 });
 
+router.delete("/analytics", requireAuth, async (req, res) => {
+  await db.delete(analyticsTable);
+  return res.json({ ok: true });
+});
+
 export default router;

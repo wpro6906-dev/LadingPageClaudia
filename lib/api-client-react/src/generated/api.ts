@@ -31,6 +31,7 @@ import type {
   LoginInput,
   Profile,
   ProfileUpdate,
+  ResetAnalytics200,
   TrackEventInput
 } from './api.schemas';
 
@@ -997,6 +998,76 @@ export function useGetAnalytics<TData = Awaited<ReturnType<typeof getAnalytics>>
 
 
 
+
+export const getResetAnalyticsUrl = () => {
+
+
+
+
+  return `/api/analytics`
+}
+
+/**
+ * @summary Delete all analytics data (admin only)
+ */
+export const resetAnalytics = async ( options?: RequestInit): Promise<ResetAnalytics200> => {
+
+  return customFetch<ResetAnalytics200>(getResetAnalyticsUrl(),
+  {
+    ...options,
+    method: 'DELETE'
+
+
+  }
+);}
+
+
+
+
+export const getResetAnalyticsMutationOptions = <TError = ErrorType<void>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof resetAnalytics>>, TError,void, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof resetAnalytics>>, TError,void, TContext> => {
+
+const mutationKey = ['resetAnalytics'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof resetAnalytics>>, void> = () => {
+
+
+          return  resetAnalytics(requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type ResetAnalyticsMutationResult = NonNullable<Awaited<ReturnType<typeof resetAnalytics>>>
+
+    export type ResetAnalyticsMutationError = ErrorType<void>
+
+    /**
+ * @summary Delete all analytics data (admin only)
+ */
+export const useResetAnalytics = <TError = ErrorType<void>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof resetAnalytics>>, TError,void, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof resetAnalytics>>,
+        TError,
+        void,
+        TContext
+      > => {
+      return useMutation(getResetAnalyticsMutationOptions(options));
+    }
 
 export const getReorderLinksUrl = () => {
 
