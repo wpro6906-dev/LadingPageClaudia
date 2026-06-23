@@ -4,8 +4,8 @@ import { z } from "zod";
 const router = Router();
 
 const USER_CREDENTIALS = {
-  username: "claudyalzate",
-  password: "claudy321",
+  username: "ClaudiaAlzate",
+  password: "Claudia123",
 };
 
 const loginSchema = z.object({

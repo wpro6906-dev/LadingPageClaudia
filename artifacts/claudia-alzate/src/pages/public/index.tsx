@@ -77,13 +77,25 @@ function getVC(profile: any): Required<VisualConfig> {
   return { ...defaults, ...(profile?.visualConfig || {}) };
 }
 
+const STALE_MS = 5 * 60 * 1000;
+
 export default function PublicProfile() {
-  const { data: profile, isLoading: isProfileLoading } = useGetProfile({
-    query: { queryKey: getGetProfileQueryKey() }
+  const { data: profile } = useGetProfile({
+    query: {
+      queryKey: getGetProfileQueryKey(),
+      staleTime: STALE_MS,
+      refetchOnWindowFocus: false,
+      retry: 1,
+    }
   });
-  
+
   const { data: links, isLoading: isLinksLoading } = useGetLinks({
-    query: { queryKey: getGetLinksQueryKey() }
+    query: {
+      queryKey: getGetLinksQueryKey(),
+      staleTime: STALE_MS,
+      refetchOnWindowFocus: false,
+      retry: 1,
+    }
   });
 
   const activeLinks = links?.filter(link => link.active).sort((a, b) => a.order - b.order) || [];
@@ -108,21 +120,6 @@ export default function PublicProfile() {
         window.open(link.url, '_blank', 'noopener,noreferrer');
       });
   };
-
-  if (isProfileLoading) {
-    return (
-      <div className="min-h-[100dvh] bg-background text-foreground flex flex-col items-center p-6">
-        <Skeleton className="w-24 h-24 rounded-full mt-12 mb-6" />
-        <Skeleton className="w-64 h-8 mb-2" />
-        <Skeleton className="w-32 h-4 mb-8" />
-        <div className="w-full max-w-md space-y-4">
-          <Skeleton className="w-full h-16 rounded-xl bg-card/40" />
-          <Skeleton className="w-full h-16 rounded-xl bg-card/40" />
-          <Skeleton className="w-full h-16 rounded-xl bg-card/40" />
-        </div>
-      </div>
-    );
-  }
 
   const vc = getVC(profile);
   

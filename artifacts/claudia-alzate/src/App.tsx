@@ -10,7 +10,15 @@ import AdminDashboard from "@/pages/admin/index";
 import DashboardLogin from "@/pages/dashboard/login";
 import UserDashboard from "@/pages/dashboard/index";
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 5 * 60 * 1000,
+      refetchOnWindowFocus: false,
+      retry: 1,
+    },
+  },
+});
 
 function Router() {
   return (
