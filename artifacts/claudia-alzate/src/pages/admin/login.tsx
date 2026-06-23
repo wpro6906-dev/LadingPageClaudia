@@ -50,6 +50,9 @@ export default function AdminLogin() {
   function onSubmit(data: LoginFormValues) {
     loginMutation.mutate({ data }, {
       onSuccess: (result: any) => {
+        if (result?.token) {
+          localStorage.setItem("auth_token", result.token);
+        }
         if (result?.role === "user") {
           queryClient.setQueryData(USER_ME_KEY, { username: result.username });
           toast({

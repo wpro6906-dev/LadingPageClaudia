@@ -36,6 +36,7 @@ export default function AdminDashboard() {
   const handleLogout = () => {
     logoutMutation.mutate(undefined, {
       onSuccess: () => {
+        localStorage.removeItem("auth_token");
         queryClient.invalidateQueries({ queryKey: getGetMeQueryKey() });
         setLocation("/admin/login");
       }

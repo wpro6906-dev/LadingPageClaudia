@@ -1,5 +1,6 @@
 import { Router } from "express";
 import { z } from "zod";
+import { createUserSession } from "../lib/session-store";
 
 const router = Router();
 
@@ -29,9 +30,9 @@ router.post("/user-auth/login", (req, res) => {
   if (username !== USER_CREDENTIALS.username || password !== USER_CREDENTIALS.password) {
     return res.status(401).json({ error: "Invalid credentials" });
   }
-  (req as any).userSession = { username };
+  const token = createUserSession({ username });
   req.log.info({ username }, "User logged in");
-  return res.json({ username });
+  return res.json({ username, token });
 });
 
 router.post("/user-auth/logout", (req, res) => {

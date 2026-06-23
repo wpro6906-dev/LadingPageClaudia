@@ -2,6 +2,7 @@ import { Router } from "express";
 import { db, adminTable } from "@workspace/db";
 import { eq } from "drizzle-orm";
 import { z } from "zod";
+import { createAdminSession, createUserSession } from "../lib/session-store";
 
 const router = Router();
 
@@ -18,14 +19,14 @@ const credentialsSchema = z.object({
   currentPassword: z.string().optional(),
 });
 
-function requireAuth(req: any, res: any, next: any) {
+export function requireAuth(req: any, res: any, next: any) {
   if (!req.session?.adminId) {
     return res.status(401).json({ error: "Not authenticated" });
   }
   next();
 }
 
-function requireAnyAuth(req: any, res: any, next: any) {
+export function requireAnyAuth(req: any, res: any, next: any) {
   if (req.session?.adminId || req.userSession?.username) {
     return next();
   }
@@ -39,29 +40,29 @@ router.post("/auth/login", async (req, res) => {
   }
   const { username, password } = parsed.data;
 
-  // Check user credentials (dashboard user)
+  // Check dashboard user credentials
   if (username === USER_CREDENTIALS.username && password === USER_CREDENTIALS.password) {
-    (req as any).userSession = { username };
+    const token = createUserSession({ username });
     req.log.info({ username }, "User logged in via unified login");
-    return res.json({ username, role: "user" });
+    return res.json({ username, role: "user", token });
   }
 
-  // Check admin credentials in DB — fallback to env/hardcoded if DB is unavailable
+  // Check admin credentials in DB with env fallback
   try {
     const [admin] = await db.select().from(adminTable).where(eq(adminTable.username, username));
     if (admin && admin.password === password) {
-      (req as any).session = { adminId: admin.id, username: admin.username };
+      const token = createAdminSession({ adminId: admin.id, username: admin.username });
       req.log.info({ adminId: admin.id }, "Admin logged in");
-      return res.json({ username: admin.username, role: "admin" });
+      return res.json({ username: admin.username, role: "admin", token });
     }
   } catch (err) {
-    req.log.error({ err }, "DB error during admin login — falling back to env credentials");
+    req.log.error({ err }, "DB error during admin login — trying env fallback");
     const envUser = process.env.ADMIN_USERNAME || "admin";
     const envPass = process.env.ADMIN_PASSWORD || "admin123";
     if (username === envUser && password === envPass) {
-      (req as any).session = { adminId: 1, username };
+      const token = createAdminSession({ adminId: 1, username });
       req.log.info({ username }, "Admin logged in via env fallback");
-      return res.json({ username, role: "admin" });
+      return res.json({ username, role: "admin", token });
     }
   }
 
@@ -98,5 +99,4 @@ router.patch("/auth/credentials", requireAuth, async (req, res) => {
   return res.json({ ok: true });
 });
 
-export { requireAuth, requireAnyAuth };
 export default router;

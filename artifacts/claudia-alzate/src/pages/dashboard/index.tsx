@@ -26,7 +26,10 @@ export default function UserDashboard() {
       setUser(cached);
       return;
     }
-    fetch(`${API_BASE}/api/user-auth/me`, { credentials: "include" })
+    const token = localStorage.getItem("auth_token");
+    fetch(`${API_BASE}/api/user-auth/me`, {
+      headers: token ? { Authorization: `Bearer ${token}` } : {},
+    })
       .then((r) => {
         if (!r.ok) throw new Error("Not authenticated");
         return r.json();

@@ -38,12 +38,14 @@ export default function DashboardLogin() {
       const res = await fetch(`${API_BASE}/api/user-auth/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        credentials: "include",
         body: JSON.stringify(data),
       });
       if (!res.ok) throw new Error("Invalid credentials");
       const user = await res.json();
-      queryClient.setQueryData(USER_ME_KEY, user);
+      if (user?.token) {
+        localStorage.setItem("auth_token", user.token);
+      }
+      queryClient.setQueryData(USER_ME_KEY, { username: user.username });
       toast({ title: "Bienvenida", description: "Sesión iniciada correctamente." });
       setLocation("/dashboard");
     } catch {

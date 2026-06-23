@@ -2,33 +2,28 @@ import express, { type Express } from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import pinoHttp from "pino-http";
-import crypto from "crypto";
 import router from "./routes";
 import { logger } from "./lib/logger";
+import {
+  getAdminSession,
+  getUserSession,
+  deleteAdminSession,
+  deleteUserSession,
+} from "./lib/session-store";
 
 const app: Express = express();
 
-const SESSION_SECRET = process.env.SESSION_SECRET || "claudia-alzate-secret-key";
 const IS_PROD = process.env.NODE_ENV === "production";
-
-const sessions = new Map<string, { adminId: number; username: string }>();
-const userSessions = new Map<string, { username: string }>();
 
 app.use(
   pinoHttp({
     logger,
     serializers: {
       req(req) {
-        return {
-          id: req.id,
-          method: req.method,
-          url: req.url?.split("?")[0],
-        };
+        return { id: req.id, method: req.method, url: req.url?.split("?")[0] };
       },
       res(res) {
-        return {
-          statusCode: res.statusCode,
-        };
+        return { statusCode: res.statusCode };
       },
     },
   }),
@@ -39,12 +34,9 @@ const extraOrigins = process.env.ALLOWED_ORIGINS
   : [];
 
 function isOriginAllowed(origin: string): boolean {
-  // Always allow Vercel and Render preview/production domains
   if (origin.endsWith(".vercel.app")) return true;
   if (origin.endsWith(".onrender.com")) return true;
-  // Allow any extra origins configured via env var
   if (extraOrigins.includes(origin)) return true;
-  // In development, allow localhost
   if (!IS_PROD && origin.startsWith("http://localhost")) return true;
   return false;
 }
@@ -52,7 +44,6 @@ function isOriginAllowed(origin: string): boolean {
 app.use(
   cors({
     origin: (origin, callback) => {
-      // Non-browser requests (curl, server-to-server) have no origin
       if (!origin) return callback(null, true);
       if (isOriginAllowed(origin)) return callback(null, true);
       logger.warn({ origin }, "CORS: origin blocked");
@@ -64,69 +55,49 @@ app.use(
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(cookieParser(SESSION_SECRET));
+app.use(cookieParser());
 
+// Attach session from Bearer token (primary) or cookie (fallback)
 app.use((req: any, _res, next) => {
-  const token = req.cookies?.["session"];
-  if (token && sessions.has(token)) {
-    req.session = sessions.get(token);
-    req._sessionToken = token;
-  } else {
-    req.session = null;
+  const auth = req.headers.authorization;
+  if (auth?.startsWith("Bearer ")) {
+    const token = auth.slice(7);
+    const admin = getAdminSession(token);
+    if (admin) { req.session = admin; req._sessionToken = token; }
+    const user = getUserSession(token);
+    if (user) { req.userSession = user; req._userSessionToken = token; }
   }
 
-  const userToken = req.cookies?.["user-session"];
-  if (userToken && userSessions.has(userToken)) {
-    req.userSession = userSessions.get(userToken);
-    req._userSessionToken = userToken;
-  } else {
-    req.userSession = null;
+  // Cookie fallback (for same-origin or tools like curl)
+  if (!req.session) {
+    const t = req.cookies?.["session"];
+    if (t) { req.session = getAdminSession(t); req._sessionToken = t; }
   }
+  if (!req.userSession) {
+    const t = req.cookies?.["user-session"];
+    if (t) { req.userSession = getUserSession(t); req._userSessionToken = t; }
+  }
+
+  if (!req.session) req.session = null;
+  if (!req.userSession) req.userSession = null;
 
   next();
 });
 
-const cookieOptions = {
-  httpOnly: true,
-  sameSite: (IS_PROD ? "none" : "lax") as "none" | "lax",
-  secure: IS_PROD,
-  maxAge: 7 * 24 * 60 * 60 * 1000,
-};
-
+// Handle explicit logouts (session set to null by route)
 app.use((req: any, res: any, next) => {
   const originalJson = res.json.bind(res);
-  const originalEnd = res.end.bind(res);
-
-  const flushSession = () => {
-    if (req.session === null && req._sessionToken) {
-      sessions.delete(req._sessionToken);
-      res.clearCookie("session");
-    } else if (req.session && !req._sessionToken) {
-      const token = crypto.randomBytes(32).toString("hex");
-      sessions.set(token, req.session);
-      res.cookie("session", token, cookieOptions);
-    }
-
-    if (req.userSession === null && req._userSessionToken) {
-      userSessions.delete(req._userSessionToken);
-      res.clearCookie("user-session");
-    } else if (req.userSession && !req._userSessionToken) {
-      const token = crypto.randomBytes(32).toString("hex");
-      userSessions.set(token, req.userSession);
-      res.cookie("user-session", token, cookieOptions);
-    }
-  };
-
   res.json = (body: any) => {
-    flushSession();
+    if (req.session === null && req._sessionToken) {
+      deleteAdminSession(req._sessionToken);
+      res.clearCookie("session");
+    }
+    if (req.userSession === null && req._userSessionToken) {
+      deleteUserSession(req._userSessionToken);
+      res.clearCookie("user-session");
+    }
     return originalJson(body);
   };
-
-  res.end = (...args: any[]) => {
-    flushSession();
-    return originalEnd(...args);
-  };
-
   next();
 });
 
