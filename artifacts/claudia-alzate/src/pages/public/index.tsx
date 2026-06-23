@@ -188,7 +188,7 @@ export default function PublicProfile() {
               }}
             />
 
-            {/* Portrait — transparent PNG, person anchored bottom-right */}
+            {/* Portrait — transparent PNG, small accent at bottom-right */}
             {vc.portraitUrl && (
               <img
                 src={vc.portraitUrl}
@@ -196,12 +196,12 @@ export default function PublicProfile() {
                 aria-hidden="true"
                 className="absolute bottom-0 right-0 pointer-events-none"
                 style={{
-                  height: `${vc.portraitSize ?? 50}%`,
+                  height: `${Math.min(38, (vc.portraitSize ?? 50) * 0.65)}%`,
                   width: "auto",
-                  maxWidth: "68%",
+                  maxWidth: "48%",
                   objectFit: "contain",
                   objectPosition: "bottom right",
-                  opacity: vc.portraitOpacity ?? 0.9,
+                  opacity: vc.portraitOpacity ?? 0.85,
                 }}
               />
             )}
