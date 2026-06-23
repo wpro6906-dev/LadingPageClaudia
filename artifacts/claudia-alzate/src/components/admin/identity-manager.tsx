@@ -10,7 +10,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Slider } from "@/components/ui/slider";
-import { Save, Home, MapPin, Star, Key, Building2, Phone, Mail } from "lucide-react";
+import { Save, Home, MapPin, Star, Key, Building2, Phone, Mail, Users } from "lucide-react";
 
 export function IdentityManager() {
   const { toast } = useToast();
@@ -57,6 +57,16 @@ export function IdentityManager() {
     portraitSize: 68,
     portraitBlendLeft: 50,
     portraitBlendTop: 30,
+    bgPhrase: "Luxury Real Estate",
+    bgPhraseEnabled: true,
+    bgPhraseOpacity: 0.04,
+    statsEnabled: true,
+    stats: [
+      { icon: "mappin", value: "", label: "Miami, FL", enabled: true },
+      { icon: "home", value: "150+", label: "Propiedades Vendidas", enabled: true },
+      { icon: "star", value: "10+", label: "Años de Experiencia", enabled: true },
+      { icon: "users", value: "500+", label: "Clientes Satisfechos", enabled: true },
+    ],
   });
 
   useEffect(() => {
@@ -98,6 +108,16 @@ export function IdentityManager() {
         portraitSize: vc.portraitSize ?? 68,
         portraitBlendLeft: vc.portraitBlendLeft ?? 50,
         portraitBlendTop: vc.portraitBlendTop ?? 30,
+        bgPhrase: vc.bgPhrase ?? "Luxury Real Estate",
+        bgPhraseEnabled: vc.bgPhraseEnabled ?? true,
+        bgPhraseOpacity: vc.bgPhraseOpacity ?? 0.04,
+        statsEnabled: vc.statsEnabled ?? true,
+        stats: vc.stats ?? [
+          { icon: "mappin", value: "", label: "Miami, FL", enabled: true },
+          { icon: "home", value: "150+", label: "Propiedades Vendidas", enabled: true },
+          { icon: "star", value: "10+", label: "Años de Experiencia", enabled: true },
+          { icon: "users", value: "500+", label: "Clientes Satisfechos", enabled: true },
+        ],
       }));
     }
   }, [profile]);

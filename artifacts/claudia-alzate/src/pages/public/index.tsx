@@ -4,7 +4,7 @@ import logoPath from "@assets/image_1781908878316.png";
 import { getIconComponent, ChevronRight } from "@/components/ui/icons";
 import { Skeleton } from "@/components/ui/skeleton";
 import { motion, AnimatePresence } from "framer-motion";
-import { Home, MapPin, Star, Key, Building2, Phone, Mail } from "lucide-react";
+import { Home, MapPin, Star, Key, Building2, Phone, Mail, Users } from "lucide-react";
 
 interface VisualConfig {
   firstName?: string;
@@ -42,6 +42,11 @@ interface VisualConfig {
   portraitSize?: number;
   portraitBlendLeft?: number;
   portraitBlendTop?: number;
+  bgPhrase?: string;
+  bgPhraseEnabled?: boolean;
+  bgPhraseOpacity?: number;
+  stats?: { icon: string; value: string; label: string; enabled: boolean }[];
+  statsEnabled?: boolean;
 }
 
 function getVC(profile: any): Required<VisualConfig> {
@@ -59,6 +64,14 @@ function getVC(profile: any): Required<VisualConfig> {
     badgeText: "", badgeIcon: "mappin", badgeColor: "#D4B483",
     portraitUrl: "", portraitOpacity: 0.85, portraitSize: 68,
     portraitBlendLeft: 50, portraitBlendTop: 30,
+    bgPhrase: "Luxury Real Estate", bgPhraseEnabled: true, bgPhraseOpacity: 0.04,
+    statsEnabled: true,
+    stats: [
+      { icon: "mappin", value: "", label: "Miami, FL", enabled: true },
+      { icon: "home", value: "150+", label: "Propiedades Vendidas", enabled: true },
+      { icon: "star", value: "10+", label: "Años de Experiencia", enabled: true },
+      { icon: "users", value: "500+", label: "Clientes Satisfechos", enabled: true },
+    ],
   };
   return { ...defaults, ...(profile?.visualConfig || {}) };
 }
