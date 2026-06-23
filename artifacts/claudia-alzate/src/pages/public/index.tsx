@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { API_BASE } from "@/lib/api-base";
 import { useGetProfile, getGetProfileQueryKey, useGetLinks, getGetLinksQueryKey } from "@workspace/api-client-react";
 import logoPath from "@assets/image_1781908878316.png";
 import { getIconComponent, ChevronRight } from "@/components/ui/icons";
@@ -88,7 +89,7 @@ export default function PublicProfile() {
   const activeLinks = links?.filter(link => link.active).sort((a, b) => a.order - b.order) || [];
 
   useEffect(() => {
-    fetch('/api/analytics/track', {
+    fetch(`${API_BASE}/api/analytics/track`, {
       method: 'POST',
       body: JSON.stringify({ type: 'page_view' }),
       headers: { 'Content-Type': 'application/json' }
@@ -97,7 +98,7 @@ export default function PublicProfile() {
 
   const handleLinkClick = (e: React.MouseEvent<HTMLAnchorElement>, link: any) => {
     e.preventDefault();
-    fetch('/api/analytics/track', {
+    fetch(`${API_BASE}/api/analytics/track`, {
       method: 'POST',
       body: JSON.stringify({ type: 'link_click', linkId: link.id }),
       headers: { 'Content-Type': 'application/json' }

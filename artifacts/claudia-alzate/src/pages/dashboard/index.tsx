@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { API_BASE } from "@/lib/api-base";
 import { useLocation } from "wouter";
 import { Link2, User as UserIcon, Settings, LogOut, BarChart2 } from "lucide-react";
 import logoPath from "@assets/image_1781908878316.png";
@@ -25,8 +26,7 @@ export default function UserDashboard() {
       setUser(cached);
       return;
     }
-    const base = import.meta.env.BASE_URL.replace(/\/$/, "");
-    fetch(`${base}/api/user-auth/me`, { credentials: "include" })
+    fetch(`${API_BASE}/api/user-auth/me`, { credentials: "include" })
       .then((r) => {
         if (!r.ok) throw new Error("Not authenticated");
         return r.json();
@@ -47,8 +47,7 @@ export default function UserDashboard() {
   }, [user, setLocation]);
 
   const handleLogout = async () => {
-    const base = import.meta.env.BASE_URL.replace(/\/$/, "");
-    await fetch(`${base}/api/user-auth/logout`, { method: "POST", credentials: "include" });
+    await fetch(`${API_BASE}/api/user-auth/logout`, { method: "POST", credentials: "include" });
     queryClient.removeQueries({ queryKey: USER_ME_KEY });
     toast({ title: "Sesión cerrada", description: "Hasta pronto!" });
     setLocation("/dashboard/login");

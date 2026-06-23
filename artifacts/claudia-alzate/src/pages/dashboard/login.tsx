@@ -10,6 +10,7 @@ import { Input } from "@/components/ui/input";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useQueryClient } from "@tanstack/react-query";
+import { API_BASE } from "@/lib/api-base";
 
 const loginSchema = z.object({
   username: z.string().min(1, "Usuario requerido"),
@@ -34,8 +35,7 @@ export default function DashboardLogin() {
   async function onSubmit(data: LoginFormValues) {
     setIsPending(true);
     try {
-      const base = import.meta.env.BASE_URL.replace(/\/$/, "");
-      const res = await fetch(`${base}/api/user-auth/login`, {
+      const res = await fetch(`${API_BASE}/api/user-auth/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
