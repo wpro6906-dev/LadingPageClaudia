@@ -394,7 +394,7 @@ export default function PublicProfile() {
         {/* Bottom separator */}
         <div className="hidden lg:block absolute bottom-0 inset-x-0 pointer-events-none" style={{ height: "1px", background: "linear-gradient(to right, transparent 0%, rgba(212,175,55,0.25) 30%, rgba(212,175,55,0.25) 70%, transparent 100%)" }} />
 
-        {/* Portrait — desktop only, transparent PNG anchored bottom-right */}
+        {/* Portrait — desktop only, large transparent PNG anchored bottom-right */}
         {vc.portraitUrl && (
           <img
             src={vc.portraitUrl}
@@ -402,9 +402,9 @@ export default function PublicProfile() {
             aria-hidden="true"
             className="hidden lg:block absolute bottom-0 right-0 pointer-events-none z-0"
             style={{
-              height: `${Math.min(96, (vc.portraitSize ?? 50) * 1.6)}%`,
+              height: "90%",
               width: "auto",
-              maxWidth: "50%",
+              maxWidth: "55%",
               objectFit: "contain",
               objectPosition: "bottom right",
               opacity: vc.portraitOpacity ?? 0.9,
@@ -412,7 +412,7 @@ export default function PublicProfile() {
           />
         )}
 
-        <main className="w-full max-w-md mx-auto flex flex-col flex-1 lg:flex-none justify-center relative z-10">
+        <main className="w-full max-w-md mx-auto lg:mx-0 lg:ml-10 lg:mr-auto flex flex-col flex-1 lg:flex-none justify-center relative z-10">
           
           {/* Links */}
           <motion.div 
