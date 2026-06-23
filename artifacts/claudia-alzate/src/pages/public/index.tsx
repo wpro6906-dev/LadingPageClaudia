@@ -199,28 +199,30 @@ export default function PublicProfile() {
               }}
             />
 
-            {/* Portrait — transparent PNG, small accent at bottom-right */}
-            {vc.portraitUrl && (
-              <img
-                src={vc.portraitUrl}
-                alt=""
-                aria-hidden="true"
-                className="absolute bottom-0 right-0 pointer-events-none"
-                style={{
-                  height: `${Math.min(38, (vc.portraitSize ?? 50) * 0.65)}%`,
-                  width: "auto",
-                  maxWidth: "48%",
-                  objectFit: "contain",
-                  objectPosition: "bottom right",
-                  opacity: vc.portraitOpacity ?? 0.85,
-                }}
-              />
-            )}
           </>
         ) : (
           <div className="absolute inset-0 bg-gradient-to-b from-[#0a0806] to-background" />
         )}
       </div>
+
+      {/* Mobile portrait — outside the -z-10 background so it renders above all overlays and columns */}
+      {vc.portraitUrl && (
+        <img
+          src={vc.portraitUrl}
+          alt=""
+          aria-hidden="true"
+          className="lg:hidden absolute bottom-0 right-0 pointer-events-none"
+          style={{
+            zIndex: 5,
+            height: `${Math.min(38, (vc.portraitSize ?? 50) * 0.65)}%`,
+            width: "auto",
+            maxWidth: "48%",
+            objectFit: "contain",
+            objectPosition: "bottom right",
+            opacity: vc.portraitOpacity ?? 0.85,
+          }}
+        />
+      )}
 
       {/* Left Column / Mobile Header */}
       <div className="relative w-full lg:w-[40%] flex flex-col items-center justify-center px-8 pt-6 pb-3 lg:p-12 z-10 
