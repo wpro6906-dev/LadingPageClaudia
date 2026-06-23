@@ -110,15 +110,15 @@ export default function PublicProfile() {
 
   const handleLinkClick = (e: React.MouseEvent<HTMLAnchorElement>, link: any) => {
     e.preventDefault();
+    // Open immediately — must be synchronous within the user gesture (tap/click)
+    // so mobile browsers don't block it as a popup.
+    window.open(link.url, '_blank', 'noopener,noreferrer');
+    // Track analytics in background after navigation is already triggered
     fetch(`${API_BASE}/api/analytics/track`, {
       method: 'POST',
       body: JSON.stringify({ type: 'link_click', linkId: link.id }),
       headers: { 'Content-Type': 'application/json' }
-    })
-      .catch(() => {})
-      .finally(() => {
-        window.open(link.url, '_blank', 'noopener,noreferrer');
-      });
+    }).catch(() => {});
   };
 
   const vc = getVC(profile);
