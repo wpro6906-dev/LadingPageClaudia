@@ -34,16 +34,28 @@ app.use(
   }),
 );
 
-const allowedOrigins = process.env.ALLOWED_ORIGINS
+const extraOrigins = process.env.ALLOWED_ORIGINS
   ? process.env.ALLOWED_ORIGINS.split(",").map((o) => o.trim())
-  : null;
+  : [];
+
+function isOriginAllowed(origin: string): boolean {
+  // Always allow Vercel and Render preview/production domains
+  if (origin.endsWith(".vercel.app")) return true;
+  if (origin.endsWith(".onrender.com")) return true;
+  // Allow any extra origins configured via env var
+  if (extraOrigins.includes(origin)) return true;
+  // In development, allow localhost
+  if (!IS_PROD && origin.startsWith("http://localhost")) return true;
+  return false;
+}
 
 app.use(
   cors({
     origin: (origin, callback) => {
+      // Non-browser requests (curl, server-to-server) have no origin
       if (!origin) return callback(null, true);
-      if (!allowedOrigins) return callback(null, true);
-      if (allowedOrigins.includes(origin)) return callback(null, true);
+      if (isOriginAllowed(origin)) return callback(null, true);
+      logger.warn({ origin }, "CORS: origin blocked");
       callback(new Error(`CORS: origin ${origin} not allowed`));
     },
     credentials: true,
