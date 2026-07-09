@@ -34,10 +34,19 @@ const extraOrigins = process.env.ALLOWED_ORIGINS
   : [];
 
 function isOriginAllowed(origin: string): boolean {
-  if (origin.endsWith(".vercel.app")) return true;
-  if (origin.endsWith(".onrender.com")) return true;
+  let parsed: URL;
+  try {
+    parsed = new URL(origin);
+  } catch {
+    return false;
+  }
+  const { hostname } = parsed;
+  if (hostname.endsWith(".vercel.app")) return true;
+  if (hostname.endsWith(".onrender.com")) return true;
   if (extraOrigins.includes(origin)) return true;
-  if (!IS_PROD && origin.startsWith("http://localhost")) return true;
+  if (!IS_PROD && (hostname === "localhost" || hostname === "127.0.0.1")) return true;
+  if (!IS_PROD && hostname.endsWith(".replit.dev")) return true;
+  if (!IS_PROD && hostname.endsWith(".repl.co")) return true;
   return false;
 }
 
