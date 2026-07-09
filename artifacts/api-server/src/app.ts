@@ -110,6 +110,10 @@ app.use((req: any, res: any, next) => {
   next();
 });
 
+app.get("/", (_req, res) => {
+  res.send("API running");
+});
+
 app.use("/api", router);
 
 export default app;
